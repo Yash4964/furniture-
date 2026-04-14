@@ -288,6 +288,9 @@ body {
     <nav class="nav-links" id="navLinks">
         <a onclick="loadTV()">TV Unit</a>
         <a onclick="loadBedroom()">Bedroom</a>
+        <a onclick="loadMandir()">Mandir</a>
+        <a onclick="loadKitchen()">Kitchen</a>
+        <a onclick="loadWardrobe()">Wardrobe</a>
     </nav>
 </header>
 
@@ -306,7 +309,10 @@ body {
 // ================= API =================
 const API = {
     tv: "https://69dce09c84f912a26404571d.mockapi.io/Tv_Unit",
-    bedroom: "https://69dce09c84f912a26404571d.mockapi.io/badroom"
+    bedroom: "https://69dce09c84f912a26404571d.mockapi.io/badroom",
+    mandir: "https://69de3161410caa3d47babfdb.mockapi.io/mandir",
+    kitchen: "https://69de3161410caa3d47babfdb.mockapi.io/kitchen",
+    wardrobe: "https://69de37f1410caa3d47bacf18.mockapi.io/wardrobe"
 };
 
 const DEFAULT_IMG = "https://via.placeholder.com/300x200?text=No+Image";
@@ -329,10 +335,15 @@ function loadData(type) {
         let html = "";
 
         data.forEach(item => {
-
             let img = (type === "tv")
                 ? item.tv_img
-                : item.bad_img;
+                : (type === "bedroom"
+                    ? item.bad_img
+                    : (type === "mandir"
+                        ? item.mandir_img
+                        : (type === "kitchen" ? item.kitchen_img : item.wardrobe_img)));
+
+            img = img || item.image || item.img || item.photo || DEFAULT_IMG;
 
             img = img || DEFAULT_IMG;
 
@@ -370,6 +381,21 @@ function loadTV() {
 function loadBedroom() {
     title.innerText = "Bedroom Collection";
     loadData("bedroom");
+}
+
+function loadMandir() {
+    title.innerText = "Mandir Collection";
+    loadData("mandir");
+}
+
+function loadKitchen() {
+    title.innerText = "Kitchen Collection";
+    loadData("kitchen");
+}
+
+function loadWardrobe() {
+    title.innerText = "Wardrobe Collection";
+    loadData("wardrobe");
 }
 
 // ================= MODAL CLOSE =================
