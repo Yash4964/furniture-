@@ -1,73 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>TV Unit Gallery</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TV Unit Gallery</title>
 
-<style>
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background: #f5f7fa;
-    }
-
-    h1 {
-        text-align: center;
-        padding: 20px;
-        color: #333;
-    }
-
-    .container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-        padding: 20px;
-    }
-
-    .card {
-        background: #fff;
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        transition: 0.3s;
-    }
-
-    .card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    }
-
-    .card img {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-    }
-
-    .card-body {
-        padding: 15px;
-        text-align: center;
-    }
-
-    .card-body h3 {
-        margin: 10px 0;
-        color: #444;
-    }
-
-    .btn {
-        display: inline-block;
-        padding: 8px 15px;
-        background: #007bff;
-        color: #fff;
-        border-radius: 8px;
-        text-decoration: none;
-        transition: 0.3s;
-    }
-
-    .btn:hover {
-        background: #0056b3;
-    }
-</style>
-
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -75,28 +14,14 @@
 
 <div class="container" id="products"></div>
 
-<script>
-fetch("https://69dce09c84f912a26404571d.mockapi.io/Tv_Unit")
-    .then(res => res.json())
-    .then(data => {
-        let html = "";
+<!-- Image Modal -->
+<div id="imageModal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modalImg">
+</div>
 
-        data.forEach(item => {
-            html += `
-                <div class="card">
-                    <img src="${item.tv_img}" alt="TV Unit"/>
-                    <div class="card-body">
-                        <h3>TV Unit ${item.id}</h3>
-                        <a href="#" class="btn">View More</a>
-                    </div>
-                </div>
-            `;
-        });
-
-        document.getElementById("products").innerHTML = html;
-    })
-    .catch(err => console.log(err));
-</script>
+<!-- JS -->
+<script src="script.js"></script>
 
 </body>
 </html>
