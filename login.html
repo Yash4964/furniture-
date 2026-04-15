@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auraline Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="page-shell">
+        <section class="login-shell">
+            <section class="form-panel">
+                <div class="form-card">
+                    <div class="topbar">
+                        <div class="logo-mark" aria-hidden="true">
+                            <svg viewBox="0 0 120 120" role="img">
+                                <defs>
+                                    <linearGradient id="logoGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#ffcc8f"></stop>
+                                        <stop offset="100%" stop-color="#f08a24"></stop>
+                                    </linearGradient>
+                                </defs>
+                                <rect x="10" y="10" width="100" height="100" rx="30" fill="#192129"></rect>
+                                <path d="M34 78L58 36L86 78H72L58 54L47 78H34Z" fill="url(#logoGlow)"></path>
+                                <circle cx="82" cy="40" r="8" fill="#fff0d2"></circle>
+                            </svg>
+                        </div>
+                        <div class="topbar-copy">
+                            <p class="brand-name">Auraline Studio</p>
+                            <p class="brand-subline">Interior design client portal</p>
+                        </div>
+                    </div>
+
+                    <form class="login-form" id="loginForm" novalidate>
+                        <label class="field">
+                            <span>Username</span>
+                            <input
+                                id="username"
+                                name="username"
+                                type="text"
+                                placeholder="Enter your username"
+                                autocomplete="username"
+                                required
+                                aria-describedby="usernameError"
+                            >
+                            <small class="field-message" id="usernameError" aria-live="polite"></small>
+                        </label>
+
+                        <label class="field">
+                            <span>Password</span>
+                            <div class="password-row">
+                                <input
+                                    id="password"
+                                    name="password"
+                                    type="password"
+                                    placeholder="Enter your password"
+                                    autocomplete="current-password"
+                                    required
+                                    aria-describedby="passwordError"
+                                >
+                                <button type="button" class="toggle-password" id="togglePassword" aria-label="Show password">
+                                    View
+                                </button>
+                            </div>
+                            <small class="field-message" id="passwordError" aria-live="polite"></small>
+                        </label>
+
+                        <div class="form-meta">
+                            <label class="remember" for="rememberMe">
+                                <input id="rememberMe" type="checkbox" name="remember">
+                                <span>Remember me</span>
+                            </label>
+                            <a href="#" class="help-link">Forgot password?</a>
+                        </div>
+
+                        <button class="login-button" type="submit">Log in</button>
+                        <p class="form-message" id="formMessage" aria-live="polite"></p>
+                    </form>
+
+                    <div class="studio-note">
+                        <span class="studio-line"></span>
+                        <p>For invited clients and registered studio partners.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="showcase-panel" aria-hidden="true">
+                <img class="showcase-image" src="assets/login-showcase.jpg" alt="Modern chair in a styled interior">
+                <div class="showcase-copy">
+                    <p class="eyebrow">Curated interiors</p>
+                    <h3>Spaces shaped with restraint, material warmth, and architectural balance.</h3>
+                    <div class="showcase-meta">
+                        <span>Residential</span>
+                        <span>Hospitality</span>
+                        <span>Bespoke furniture</span>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>
