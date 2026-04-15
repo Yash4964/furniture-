@@ -1,161 +1,127 @@
-// ==============================
-// 🌐 API CONFIG (PAGE BASED)
-// ==============================
-const API_MAP = {
-    index: "https://69dce09c84f912a26404571d.mockapi.io/Tv_Unit",
-    sofa: "https://your-api.com/sofa",
-    bedroom: "https://69dce09c84f912a26404571d.mockapi.io/badroom"
-};
+const loginForm = document.getElementById("loginForm");
 
-// ==============================
-// 🖼️ DEFAULT IMAGE
-// ==============================
-const DEFAULT_IMG = "https://via.placeholder.com/300x200?text=No+Image";
+if (loginForm) {
+    const LOGIN_API_URL = "https://69df293ed6de26e11928a3ce.mockapi.io/login_page";
+    const usernameInput = document.getElementById("username");
+    const passwordInput = document.getElementById("password");
+    const togglePasswordButton = document.getElementById("togglePassword");
+    const formMessage = document.getElementById("formMessage");
+    const usernameError = document.getElementById("usernameError");
+    const passwordError = document.getElementById("passwordError");
+    const submitButton = loginForm.querySelector(".login-button");
 
-// ==============================
-// 📦 DOM ELEMENTS
-// ==============================
-const container = document.getElementById("products");
-const modal = document.getElementById("imageModal");
-const modalImg = document.getElementById("modalImg");
-const closeModal = document.getElementById("closeModal");
-
-const dropdownMenu = document.getElementById("dropdownMenu");
-const menuIcon = document.getElementById("menuIcon");
-const navMenu = document.getElementById("navMenu");
-const overlay = document.getElementById("overlay");
-
-// ==============================
-// 📄 DETECT CURRENT PAGE
-// ==============================
-let page = window.location.pathname.split("/").pop().replace(".html", "");
-
-// fallback for local file
-if (!page || page === "") page = "index";
-
-console.log("Current Page:", page);
-
-// ==============================
-// 🧠 SMART IMAGE DETECTOR
-// ==============================
-function getImage(item) {
-    return (
-        item.tv_img ||
-        item.image ||
-        item.img ||
-        item.photo ||
-        item.thumbnail ||
-        item.url ||
-        DEFAULT_IMG
-    );
-}
-
-// ==============================
-// 📊 LOAD DATA FROM API
-// ==============================
-function loadData() {
-    const API_URL = API_MAP[page];
-
-    if (!API_URL) {
-        container.innerHTML = "<p>No API found for this page</p>";
-        return;
+    function setMessage(text, type = "") {
+        formMessage.textContent = text;
+        formMessage.className = type ? `form-message ${type}` : "form-message";
     }
 
-    container.innerHTML = "<p style='text-align:center'>Loading...</p>";
+    function setFieldState(input, errorNode, message) {
+        const hasError = Boolean(message);
 
-    fetch(API_URL)
-        .then(res => res.json())
-        .then(data => {
-            if (!data || data.length === 0) {
-                container.innerHTML = "<p>No data found</p>";
+        input.classList.toggle("is-invalid", hasError);
+        input.setAttribute("aria-invalid", hasError ? "true" : "false");
+        errorNode.textContent = message;
+    }
+
+    function validateField(input, errorNode) {
+        const value = input.value.trim();
+        const label = input.name === "username" ? "username" : "password";
+        const message = value ? "" : `Please enter your ${label}.`;
+
+        setFieldState(input, errorNode, message);
+        return !message;
+    }
+
+    async function authenticateUser(username, password) {
+        const response = await fetch(LOGIN_API_URL, {
+            method: "GET",
+            headers: {
+                Accept: "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Login service is unavailable.");
+        }
+
+        const users = await response.json();
+
+        return users.find((user) => {
+            return user.username === username && user.password === password;
+        });
+    }
+
+    function showAlert(icon, title, text) {
+        if (window.Swal) {
+            return window.Swal.fire({
+                icon,
+                title,
+                text,
+                confirmButtonColor: "#433726",
+            });
+        }
+
+        window.alert(text);
+        return Promise.resolve();
+    }
+
+    togglePasswordButton.addEventListener("click", () => {
+        const isPassword = passwordInput.type === "password";
+
+        passwordInput.type = isPassword ? "text" : "password";
+        togglePasswordButton.textContent = isPassword ? "Hide" : "View";
+        togglePasswordButton.setAttribute("aria-label", isPassword ? "Hide password" : "Show password");
+    });
+
+    usernameInput.addEventListener("input", () => {
+        validateField(usernameInput, usernameError);
+    });
+
+    passwordInput.addEventListener("input", () => {
+        validateField(passwordInput, passwordError);
+    });
+
+    loginForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const isUsernameValid = validateField(usernameInput, usernameError);
+        const isPasswordValid = validateField(passwordInput, passwordError);
+
+        if (!isUsernameValid || !isPasswordValid) {
+            setMessage("Please correct the highlighted fields.", "error");
+            showAlert("warning", "Missing details", "Please fill in username and password.");
+            return;
+        }
+
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        submitButton.disabled = true;
+        submitButton.textContent = "Checking...";
+        setMessage("");
+
+        try {
+            const matchedUser = await authenticateUser(username, password);
+
+            if (!matchedUser) {
+                setMessage("Invalid username or password.", "error");
+                await showAlert("error", "Login failed", "Invalid username or password.");
                 return;
             }
 
-            let html = "";
-
-            data.forEach(item => {
-                const img = getImage(item);
-
-                html += `
-                    <div class="card">
-                        <img 
-                            src="${img}" 
-                            data-img="${img}"
-                            onerror="this.src='${DEFAULT_IMG}'"
-                        >
-                        <div class="card-info">
-                            <p class="product-id">
-                                ${page.toUpperCase()}_${item.id || "00"}
-                            </p>
-                        </div>
-                    </div>
-                `;
-            });
-
-            container.innerHTML = html;
-
-            // ==============================
-            // 🔍 IMAGE CLICK → MODAL
-            // ==============================
-            document.querySelectorAll(".card img").forEach(img => {
-                img.addEventListener("click", () => {
-                    modal.style.display = "block";
-                    modalImg.src = img.dataset.img;
-                });
-            });
-        })
-        .catch(err => {
-            console.error("API Error:", err);
-            container.innerHTML = "<p style='color:red'>Failed to load data</p>";
-        });
-}
-
-// ==============================
-// 🔽 DROPDOWN NAVIGATION
-// ==============================
-if (dropdownMenu) {
-    document.querySelectorAll("#dropdownMenu div").forEach(item => {
-        item.addEventListener("click", () => {
-            const targetPage = item.getAttribute("data-page");
-
-            if (targetPage) {
-                window.location.href = targetPage;
-            }
-        });
+            setMessage(`Welcome back, ${matchedUser.username}.`, "success");
+            window.localStorage.setItem("dashboardUser", JSON.stringify({
+                id: matchedUser.id,
+                username: matchedUser.username,
+            }));
+            await showAlert("success", "Login successful", `Welcome back, ${matchedUser.username}.`);
+            window.location.href = "dashboard.html";
+        } catch (error) {
+            setMessage(error.message || "Unable to verify login right now.", "error");
+            await showAlert("error", "Service error", error.message || "Unable to verify login right now.");
+        } finally {
+            submitButton.disabled = false;
+            submitButton.textContent = "Log in";
+        }
     });
 }
-
-// ==============================
-// ❌ CLOSE MODAL
-// ==============================
-if (closeModal) {
-    closeModal.onclick = () => modal.style.display = "none";
-}
-
-window.onclick = (e) => {
-    if (e.target === modal) {
-        modal.style.display = "none";
-    }
-};
-
-// ==============================
-// 📱 MOBILE MENU
-// ==============================
-if (menuIcon) {
-    menuIcon.addEventListener("click", () => {
-        navMenu.classList.add("active");
-        overlay.classList.add("active");
-    });
-}
-
-if (overlay) {
-    overlay.addEventListener("click", () => {
-        navMenu.classList.remove("active");
-        overlay.classList.remove("active");
-    });
-}
-
-// ==============================
-// 🚀 INITIAL LOAD
-// ==============================
-loadData();
