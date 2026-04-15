@@ -308,8 +308,8 @@ body {
 
 // ================= API =================
 const API = {
-    tv: "https://69dce09c84f912a26404571d.mockapi.io/Tv_Unit",
-    bedroom: "https://69dce09c84f912a26404571d.mockapi.io/badroom",
+    tv: "https://69df1758d6de26e119288636.mockapi.io/tv_unit",
+    bedroom: "https://69df1758d6de26e119288636.mockapi.io/bedroom",
     mandir: "https://69de3161410caa3d47babfdb.mockapi.io/mandir",
     kitchen: "https://69de3161410caa3d47babfdb.mockapi.io/kitchen",
     wardrobe: "https://69de37f1410caa3d47bacf18.mockapi.io/wardrobe"
@@ -324,6 +324,31 @@ const closeModal = document.getElementById("closeModal");
 const title = document.getElementById("title");
 const menuToggle = document.getElementById("menuToggle");
 const navLinks = document.getElementById("navLinks");
+
+function optimizeImageUrl(url, mode = "card") {
+    if (!url || typeof url !== "string") return DEFAULT_IMG;
+
+    if (url.includes("images.livspace-cdn.com")) {
+        const width = mode === "modal" ? 1280 : 640;
+        return url.replace(/\/w:\d+\//, `/w:${width}/`);
+    }
+
+    if (url.includes("i.pinimg.com")) {
+        if (url.includes("/originals/")) {
+            return url.replace("/originals/", mode === "modal" ? "/736x/" : "/564x/");
+        }
+
+        if (/\/\d+x\//.test(url)) {
+            return url.replace(/\/\d+x\//, mode === "modal" ? "/736x/" : "/564x/");
+        }
+
+        if (/\/\d+x\d+_RS\//.test(url)) {
+            return url.replace(/\/\d+x\d+_RS\//, mode === "modal" ? "/736x/" : "/564x/");
+        }
+    }
+
+    return url;
+}
 
 // ================= LOAD DATA =================
 function loadData(type) {
@@ -346,10 +371,12 @@ function loadData(type) {
             img = img || item.image || item.img || item.photo || DEFAULT_IMG;
 
             img = img || DEFAULT_IMG;
+            const cardImg = optimizeImageUrl(img, "card");
+            const modalImage = optimizeImageUrl(img, "modal");
 
             html += `
                 <div class="card">
-                    <img src="${img}" data-img="${img}">
+                    <img src="${cardImg}" data-img="${modalImage}" loading="lazy" decoding="async">
                     <div class="card-info">
                         <p class="title">IMAGE_${item.id}</p>
                     </div>
