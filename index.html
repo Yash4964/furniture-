@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FurniSpace</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+<style>
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    background: #f4f6f9;
+    color: #1f2937;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 16px 30px;
+    background: #ffffff;
+    box-shadow: 0 6px 24px rgba(15, 23, 42, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-badge {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #0f172a, #2563eb);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+}
+
+.brand-text h2 {
+    margin: 0;
+    font-size: 22px;
+    line-height: 1.1;
+}
+
+.brand-text p {
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.header a,
+.header button {
+    margin: 0;
+    cursor: pointer;
+    text-decoration: none;
+    color: #334155;
+    font-weight: 600;
+    border: 0;
+    background: #eef2ff;
+    padding: 10px 16px;
+    border-radius: 999px;
+    transition: 0.2s ease;
+}
+
+.header a:hover,
+.header button:hover {
+    background: #dbeafe;
+    color: #0f172a;
+}
+
+#title {
+    padding: 24px 20px 8px;
+    margin: 0;
+    font-size: 26px;
+}
+
+.category-section {
+    padding: 22px 20px 6px;
+}
+
+.category-heading {
+    margin: 0 0 16px;
+    font-size: 22px;
+    color: #0f172a;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 18px;
+}
+
+.category-tile {
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    text-align: center;
+    color: #0f172a;
+}
+
+.category-thumb {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #eef2f7;
+    box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.18);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.category-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.category-name {
+    display: block;
+    margin-top: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.category-note {
+    display: block;
+    margin-top: 4px;
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.category-tile:hover .category-thumb,
+.category-tile:focus-visible .category-thumb,
+.category-tile.active .category-thumb {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 28px rgba(37, 99, 235, 0.14);
+}
+
+.category-tile.active .category-thumb {
+    box-shadow:
+        inset 0 0 0 3px #2563eb,
+        0 18px 32px rgba(37, 99, 235, 0.18);
+}
+
+.category-tile.active .category-name {
+    color: #2563eb;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+.card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.card-info {
+    padding: 12px;
+    text-align: center;
+}
+
+.title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    letter-spacing: 1px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    background: rgba(0,0,0,0.9);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+}
+
+.modal-content {
+    width: min(92%, 980px);
+    margin: 70px auto 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modal img {
+    display: block;
+    width: 100%;
+    max-height: 72vh;
+    object-fit: contain;
+    border-radius: 12px;
+    background: #e5e7eb;
+}
+
+.modal-download {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    border: 0;
+    cursor: pointer;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: 0.2s ease;
+    color: #fff;
+    background: #2563eb;
+    z-index: 10000;
+}
+
+.modal-download:hover {
+    background: #1d4ed8;
+}
+
+.close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    color: #fff;
+    font-size: 28px;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(15, 23, 42, 0.8);
+    border-radius: 50%;
+    z-index: 10000;
+    line-height: 1;
+}
+
+.menu-toggle {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 14px 16px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        position: relative;
+    }
+
+    .brand {
+        width: 100%;
+        padding-right: 60px;
+    }
+
+    .brand-text h2 {
+        font-size: 18px;
+    }
+
+    .brand-text p {
+        font-size: 11px;
+    }
+
+    .menu-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        border-radius: 10px;
+        background: #0f172a;
+        color: #fff;
+        font-size: 16px;
+        padding: 0;
+    }
+
+    .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        padding-top: 10px;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links a {
+        width: 100%;
+        text-align: center;
+        padding: 12px 16px;
+    }
+
+    .menu-toggle {
+        width: 34px;
+        min-width: 34px;
+        max-width: 34px;
+        flex: 0 0 34px;
+    }
+
+    #title {
+        padding: 20px 16px 4px;
+        font-size: 22px;
+    }
+
+    .category-section {
+        padding: 18px 16px 4px;
+    }
+
+    .category-heading {
+        margin-bottom: 14px;
+        font-size: 20px;
+    }
+
+    .category-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px 12px;
+    }
+
+    .category-name {
+        font-size: 14px;
+    }
+
+    .category-note {
+        font-size: 11px;
+    }
+
+    .container {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        padding: 16px;
+    }
+
+    .card img {
+        height: 150px;
+    }
+
+    .modal img {
+        max-height: 66vh;
+    }
+
+    .close {
+        top: 14px;
+        right: 14px;
+    }
+
+    .modal-download {
+        top: 14px;
+        left: 14px;
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+
+    .modal-content {
+        width: calc(100% - 24px);
+        margin: 76px auto 16px;
+    }
+}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="header">
+    <div class="brand">
+        <div class="logo-badge">F</div>
+        <div class="brand-text">
+            <h2>FurniSpace</h2>
+            <p>Modern furniture collection</p>
+        </div>
+    </div>
+
+    <button class="menu-toggle" id="menuToggle" type="button">&#9776;</button>
+
+    <nav class="nav-links" id="navLinks">
+        <a onclick="loadTV()">TV Unit</a>
+        <a onclick="loadBedroom()">Bedroom</a>
+        <a onclick="loadMandir()">Mandir</a>
+        <a onclick="loadKitchen()">Kitchen</a>
+        <a onclick="loadWardrobe()">Wardrobe</a>
+    </nav>
+</header>
+
+<section class="category-section">
+    <h3 class="category-heading">Browse By Collection</h3>
+    <div id="categoryGrid" class="category-grid"></div>
+</section>
+
+<h3 id="title">TV Unit Collection</h3>
+
+<div id="products" class="container"></div>
+
+<div id="imageModal" class="modal">
+    <button id="downloadBtn" class="modal-download" type="button">Download</button>
+    <span class="close" id="closeModal">&times;</span>
+    <div class="modal-content">
+        <img id="modalImg" alt="Furniture preview">
+    </div>
+</div>
+
+<script>
+const API = {
+    tv: "https://69df1758d6de26e119288636.mockapi.io/tv_unit",
+    bedroom: "https://69df1758d6de26e119288636.mockapi.io/bedroom",
+    mandir: "https://69de3161410caa3d47babfdb.mockapi.io/mandir",
+    kitchen: "https://69de3161410caa3d47babfdb.mockapi.io/kitchen",
+    wardrobe: "https://69de37f1410caa3d47bacf18.mockapi.io/wardrobe"
+};
+
+const CATEGORY_META = {
+    tv: {
+        label: "TV Units",
+        note: "Media walls"
+    },
+    bedroom: {
+        label: "Bedrooms",
+        note: "Beds and decor"
+    },
+    mandir: {
+        label: "Mandirs",
+        note: "Pooja spaces"
+    },
+    kitchen: {
+        label: "Kitchens",
+        note: "Modular setup"
+    },
+    wardrobe: {
+        label: "Wardrobes",
+        note: "Storage units"
+    }
+};
+
+const DEFAULT_IMG = "https://via.placeholder.com/300x200?text=No+Image";
+
+const container = document.getElementById("products");
+const modal = document.getElementById("imageModal");
+const modalImg = document.getElementById("modalImg");
+const closeModal = document.getElementById("closeModal");
+const downloadBtn = document.getElementById("downloadBtn");
+const title = document.getElementById("title");
+const menuToggle = document.getElementById("menuToggle");
+const navLinks = document.getElementById("navLinks");
+const categoryGrid = document.getElementById("categoryGrid");
+
+let activeType = "tv";
+
+function getPlaceholderUrl(mode = "card") {
+    return mode === "modal"
+        ? "https://via.placeholder.com/1200x800?text=No+Image"
+        : DEFAULT_IMG;
+}
+
+function optimizeImageUrl(url, mode = "card") {
+    if (!url || typeof url !== "string") return DEFAULT_IMG;
+
+    if (url.includes("images.livspace-cdn.com")) {
+        const width = mode === "modal" ? 1280 : 640;
+        return url.replace(/\/w:\d+\//, `/w:${width}/`);
+    }
+
+    if (url.includes("i.pinimg.com")) {
+        if (url.includes("/originals/")) {
+            return url.replace("/originals/", mode === "modal" ? "/736x/" : "/564x/");
+        }
+
+        if (/\/\d+x\//.test(url)) {
+            return url.replace(/\/\d+x\//, mode === "modal" ? "/736x/" : "/564x/");
+        }
+
+        if (/\/\d+x\d+_RS\//.test(url)) {
+            return url.replace(/\/\d+x\d+_RS\//, mode === "modal" ? "/736x/" : "/564x/");
+        }
+    }
+
+    return url;
+}
+
+function getItemImage(item, type) {
+    const imageValue = (type === "tv")
+        ? item.tv_img
+        : (type === "bedroom"
+            ? item.bad_img
+            : (type === "mandir"
+                ? item.mandir_img
+                : (type === "kitchen" ? item.kitchen_img : item.wardrobe_img)));
+
+    return imageValue || item.image || item.img || item.photo || DEFAULT_IMG;
+}
+
+function sortDataDescending(data) {
+    return [...data].sort((a, b) => {
+        const aId = Number(a.id);
+        const bId = Number(b.id);
+
+        if (!Number.isNaN(aId) && !Number.isNaN(bId)) {
+            return bId - aId;
+        }
+
+        return String(b.id || "").localeCompare(String(a.id || ""));
+    });
+}
+
+function closeImageModal() {
+    modal.style.display = "none";
+}
+
+function setImageFallback(imageElement, fallbackSrc) {
+    imageElement.onerror = () => {
+        if (imageElement.src === fallbackSrc) {
+            imageElement.onerror = null;
+            return;
+        }
+
+        imageElement.src = fallbackSrc;
+        if (imageElement.dataset) {
+            imageElement.dataset.download = fallbackSrc;
+        }
+        imageElement.onerror = null;
+    };
+}
+
+function getDownloadFileName() {
+    const imageUrl = modalImg.dataset.download || modalImg.currentSrc || modalImg.src || "";
+
+    try {
+        const parsedUrl = new URL(imageUrl, window.location.href);
+        const rawName = parsedUrl.pathname.split("/").pop();
+
+        if (rawName) {
+            return decodeURIComponent(rawName.split("?")[0]);
+        }
+    } catch (error) {
+        // Fall back to generated filename below.
+    }
+
+    const collectionName = title.innerText.replace(/\s+/g, "_").toLowerCase();
+    const imageId = modalImg.dataset.id || "image";
+    return `${collectionName}_${imageId}.jpg`;
+}
+
+function triggerBrowserDownload(sourceUrl, fileName) {
+    const link = document.createElement("a");
+    link.href = sourceUrl;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+}
+
+function blobToObjectUrl(blob) {
+    return URL.createObjectURL(blob);
+}
+
+async function fetchImageBlob(imageUrl) {
+    const response = await fetch(imageUrl, {
+        mode: "cors",
+        credentials: "omit",
+        cache: "no-store"
+    });
+
+    if (!response.ok) {
+        throw new Error("Download failed");
+    }
+
+    return response.blob();
+}
+
+function canvasBlobFromUrl(imageUrl, fileName) {
+    return new Promise((resolve, reject) => {
+        const tempImage = new Image();
+        tempImage.crossOrigin = "anonymous";
+
+        tempImage.onload = () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = tempImage.naturalWidth;
+            canvas.height = tempImage.naturalHeight;
+
+            const context = canvas.getContext("2d");
+
+            if (!context) {
+                reject(new Error("Canvas unavailable"));
+                return;
+            }
+
+            try {
+                context.drawImage(tempImage, 0, 0);
+            } catch (error) {
+                reject(error);
+                return;
+            }
+
+            const lowerName = fileName.toLowerCase();
+            const mimeType = lowerName.endsWith(".png") ? "image/png" : "image/jpeg";
+
+            canvas.toBlob((blob) => {
+                if (!blob) {
+                    reject(new Error("Canvas export failed"));
+                    return;
+                }
+
+                resolve(blob);
+            }, mimeType, 0.95);
+        };
+
+        tempImage.onerror = () => {
+            reject(new Error("Canvas image load failed"));
+        };
+
+        tempImage.src = imageUrl;
+    });
+}
+
+async function downloadCurrentImage() {
+    const imageUrl = modalImg.dataset.download || modalImg.currentSrc || modalImg.src;
+
+    if (!imageUrl) {
+        return;
+    }
+
+    const fileName = getDownloadFileName();
+    downloadBtn.disabled = true;
+    downloadBtn.textContent = "Downloading...";
+
+    try {
+        let blob;
+
+        try {
+            blob = await fetchImageBlob(imageUrl);
+        } catch (fetchError) {
+            blob = await canvasBlobFromUrl(imageUrl, fileName);
+        }
+
+        const objectUrl = blobToObjectUrl(blob);
+        triggerBrowserDownload(objectUrl, fileName);
+        window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+    } catch (error) {
+        window.alert("Download blocked by the image source. This image server does not allow direct browser download.");
+    } finally {
+        downloadBtn.disabled = false;
+        downloadBtn.textContent = "Download";
+    }
+}
+
+function renderCategoryGrid() {
+    categoryGrid.innerHTML = Object.entries(CATEGORY_META).map(([type, item]) => `
+        <button class="category-tile ${type === activeType ? "active" : ""}" type="button" data-type="${type}">
+            <span class="category-thumb">
+                <img
+                    id="category-thumb-${type}"
+                    src="${getPlaceholderUrl("card")}"
+                    alt="${item.label}"
+                    loading="lazy"
+                    decoding="async"
+                >
+            </span>
+            <span class="category-name">${item.label}</span>
+            <span class="category-note">${item.note}</span>
+        </button>
+    `).join("");
+
+    document.querySelectorAll("[id^='category-thumb-']").forEach((img) => {
+        setImageFallback(img, getPlaceholderUrl("card"));
+    });
+}
+
+function setActiveCategory(type) {
+    activeType = type;
+
+    document.querySelectorAll(".category-tile").forEach((button) => {
+        button.classList.toggle("active", button.dataset.type === type);
+    });
+}
+
+function warmCategoryThumbnails() {
+    Object.entries(API).forEach(([type, url]) => {
+        fetch(url)
+            .then((res) => res.json())
+            .then((data) => {
+                const sortedData = sortDataDescending(Array.isArray(data) ? data : []);
+                const firstItem = sortedData[0];
+                const thumb = document.getElementById(`category-thumb-${type}`);
+
+                if (!thumb || !firstItem) {
+                    return;
+                }
+
+                thumb.src = optimizeImageUrl(getItemImage(firstItem, type), "card");
+            })
+            .catch(() => {
+                const thumb = document.getElementById(`category-thumb-${type}`);
+
+                if (thumb) {
+                    thumb.src = getPlaceholderUrl("card");
+                }
+            });
+    });
+}
+
+function loadData(type) {
+    container.innerHTML = "Loading...";
+    activeType = type;
+    setActiveCategory(type);
+
+    fetch(API[type])
+    .then((res) => res.json())
+    .then((data) => {
+        const sortedData = sortDataDescending(Array.isArray(data) ? data : []);
+        let html = "";
+
+        sortedData.forEach((item) => {
+            const img = getItemImage(item, type);
+
+            const cardImg = optimizeImageUrl(img, "card");
+            const modalImage = optimizeImageUrl(img, "modal");
+
+            html += `
+                <div class="card">
+                    <img src="${cardImg}" data-id="${item.id}" data-img="${modalImage}" loading="lazy" decoding="async" alt="Furniture image ${item.id}">
+                    <div class="card-info">
+                        <p class="title">IMAGE_${item.id}</p>
+                    </div>
+                </div>
+            `;
+        });
+
+        container.innerHTML = html;
+
+        document.querySelectorAll(".card img").forEach((img) => {
+            setImageFallback(img, getPlaceholderUrl("card"));
+            img.onclick = () => {
+                modal.style.display = "block";
+                modalImg.dataset.id = img.dataset.id;
+                modalImg.dataset.download = img.dataset.img;
+                setImageFallback(modalImg, getPlaceholderUrl("modal"));
+                modalImg.src = img.dataset.img;
+            };
+        });
+    })
+    .catch(() => {
+        container.innerHTML = "Failed to load data";
+    });
+}
+
+function loadTV() {
+    title.innerText = "TV Unit Collection";
+    loadData("tv");
+}
+
+function loadBedroom() {
+    title.innerText = "Bedroom Collection";
+    loadData("bedroom");
+}
+
+function loadMandir() {
+    title.innerText = "Mandir Collection";
+    loadData("mandir");
+}
+
+function loadKitchen() {
+    title.innerText = "Kitchen Collection";
+    loadData("kitchen");
+}
+
+function loadWardrobe() {
+    title.innerText = "Wardrobe Collection";
+    loadData("wardrobe");
+}
+
+setImageFallback(modalImg, getPlaceholderUrl("modal"));
+
+closeModal.onclick = closeImageModal;
+downloadBtn.onclick = downloadCurrentImage;
+
+window.onclick = (e) => {
+    if (e.target === modal) closeImageModal();
+};
+
+menuToggle.onclick = () => {
+    navLinks.classList.toggle("active");
+};
+
+categoryGrid.onclick = (event) => {
+    const button = event.target.closest(".category-tile");
+
+    if (!button) {
+        return;
+    }
+
+    const { type } = button.dataset;
+
+    if (type === "tv") loadTV();
+    if (type === "bedroom") loadBedroom();
+    if (type === "mandir") loadMandir();
+    if (type === "kitchen") loadKitchen();
+    if (type === "wardrobe") loadWardrobe();
+};
+
+renderCategoryGrid();
+warmCategoryThumbnails();
+loadTV();
+</script>
+
+</body>
+</html>
