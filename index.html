@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FurniSpace</title>
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/svg+xml" href="images/favicon.svg">
 
 <style>
 body {
@@ -90,83 +90,6 @@ body {
     padding: 24px 20px 8px;
     margin: 0;
     font-size: 26px;
-}
-
-.category-section {
-    padding: 22px 20px 6px;
-}
-
-.category-heading {
-    margin: 0 0 16px;
-    font-size: 22px;
-    color: #0f172a;
-}
-
-.category-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 18px;
-}
-
-.category-tile {
-    border: 0;
-    background: transparent;
-    cursor: pointer;
-    padding: 0;
-    text-align: center;
-    color: #0f172a;
-}
-
-.category-thumb {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    border-radius: 50%;
-    overflow: hidden;
-    background: #eef2f7;
-    box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.18);
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.category-thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.category-name {
-    display: block;
-    margin-top: 12px;
-    font-size: 15px;
-    font-weight: 600;
-    line-height: 1.4;
-}
-
-.category-note {
-    display: block;
-    margin-top: 4px;
-    color: #64748b;
-    font-size: 12px;
-    line-height: 1.4;
-}
-
-.category-tile:hover .category-thumb,
-.category-tile:focus-visible .category-thumb,
-.category-tile.active .category-thumb {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 28px rgba(37, 99, 235, 0.14);
-}
-
-.category-tile.active .category-thumb {
-    box-shadow:
-        inset 0 0 0 3px #2563eb,
-        0 18px 32px rgba(37, 99, 235, 0.18);
-}
-
-.category-tile.active .category-name {
-    color: #2563eb;
 }
 
 .container {
@@ -345,28 +268,6 @@ body {
         font-size: 22px;
     }
 
-    .category-section {
-        padding: 18px 16px 4px;
-    }
-
-    .category-heading {
-        margin-bottom: 14px;
-        font-size: 20px;
-    }
-
-    .category-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 14px 12px;
-    }
-
-    .category-name {
-        font-size: 14px;
-    }
-
-    .category-note {
-        font-size: 11px;
-    }
-
     .container {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 12px;
@@ -423,11 +324,6 @@ body {
     </nav>
 </header>
 
-<section class="category-section">
-    <h3 class="category-heading">Browse By Collection</h3>
-    <div id="categoryGrid" class="category-grid"></div>
-</section>
-
 <h3 id="title">TV Unit Collection</h3>
 
 <div id="products" class="container"></div>
@@ -449,29 +345,6 @@ const API = {
     wardrobe: "https://69de37f1410caa3d47bacf18.mockapi.io/wardrobe"
 };
 
-const CATEGORY_META = {
-    tv: {
-        label: "TV Units",
-        note: "Media walls"
-    },
-    bedroom: {
-        label: "Bedrooms",
-        note: "Beds and decor"
-    },
-    mandir: {
-        label: "Mandirs",
-        note: "Pooja spaces"
-    },
-    kitchen: {
-        label: "Kitchens",
-        note: "Modular setup"
-    },
-    wardrobe: {
-        label: "Wardrobes",
-        note: "Storage units"
-    }
-};
-
 const DEFAULT_IMG = "https://via.placeholder.com/300x200?text=No+Image";
 
 const container = document.getElementById("products");
@@ -482,9 +355,6 @@ const downloadBtn = document.getElementById("downloadBtn");
 const title = document.getElementById("title");
 const menuToggle = document.getElementById("menuToggle");
 const navLinks = document.getElementById("navLinks");
-const categoryGrid = document.getElementById("categoryGrid");
-
-let activeType = "tv";
 
 function getPlaceholderUrl(mode = "card") {
     return mode === "modal"
@@ -515,18 +385,6 @@ function optimizeImageUrl(url, mode = "card") {
     }
 
     return url;
-}
-
-function getItemImage(item, type) {
-    const imageValue = (type === "tv")
-        ? item.tv_img
-        : (type === "bedroom"
-            ? item.bad_img
-            : (type === "mandir"
-                ? item.mandir_img
-                : (type === "kitchen" ? item.kitchen_img : item.wardrobe_img)));
-
-    return imageValue || item.image || item.img || item.photo || DEFAULT_IMG;
 }
 
 function sortDataDescending(data) {
@@ -683,65 +541,8 @@ async function downloadCurrentImage() {
     }
 }
 
-function renderCategoryGrid() {
-    categoryGrid.innerHTML = Object.entries(CATEGORY_META).map(([type, item]) => `
-        <button class="category-tile ${type === activeType ? "active" : ""}" type="button" data-type="${type}">
-            <span class="category-thumb">
-                <img
-                    id="category-thumb-${type}"
-                    src="${getPlaceholderUrl("card")}"
-                    alt="${item.label}"
-                    loading="lazy"
-                    decoding="async"
-                >
-            </span>
-            <span class="category-name">${item.label}</span>
-            <span class="category-note">${item.note}</span>
-        </button>
-    `).join("");
-
-    document.querySelectorAll("[id^='category-thumb-']").forEach((img) => {
-        setImageFallback(img, getPlaceholderUrl("card"));
-    });
-}
-
-function setActiveCategory(type) {
-    activeType = type;
-
-    document.querySelectorAll(".category-tile").forEach((button) => {
-        button.classList.toggle("active", button.dataset.type === type);
-    });
-}
-
-function warmCategoryThumbnails() {
-    Object.entries(API).forEach(([type, url]) => {
-        fetch(url)
-            .then((res) => res.json())
-            .then((data) => {
-                const sortedData = sortDataDescending(Array.isArray(data) ? data : []);
-                const firstItem = sortedData[0];
-                const thumb = document.getElementById(`category-thumb-${type}`);
-
-                if (!thumb || !firstItem) {
-                    return;
-                }
-
-                thumb.src = optimizeImageUrl(getItemImage(firstItem, type), "card");
-            })
-            .catch(() => {
-                const thumb = document.getElementById(`category-thumb-${type}`);
-
-                if (thumb) {
-                    thumb.src = getPlaceholderUrl("card");
-                }
-            });
-    });
-}
-
 function loadData(type) {
     container.innerHTML = "Loading...";
-    activeType = type;
-    setActiveCategory(type);
 
     fetch(API[type])
     .then((res) => res.json())
@@ -750,7 +551,15 @@ function loadData(type) {
         let html = "";
 
         sortedData.forEach((item) => {
-            const img = getItemImage(item, type);
+            let img = (type === "tv")
+                ? item.tv_img
+                : (type === "bedroom"
+                    ? item.bad_img
+                    : (type === "mandir"
+                        ? item.mandir_img
+                        : (type === "kitchen" ? item.kitchen_img : item.wardrobe_img)));
+
+            img = img || item.image || item.img || item.photo || DEFAULT_IMG;
 
             const cardImg = optimizeImageUrl(img, "card");
             const modalImage = optimizeImageUrl(img, "modal");
@@ -820,25 +629,6 @@ window.onclick = (e) => {
 menuToggle.onclick = () => {
     navLinks.classList.toggle("active");
 };
-
-categoryGrid.onclick = (event) => {
-    const button = event.target.closest(".category-tile");
-
-    if (!button) {
-        return;
-    }
-
-    const { type } = button.dataset;
-
-    if (type === "tv") loadTV();
-    if (type === "bedroom") loadBedroom();
-    if (type === "mandir") loadMandir();
-    if (type === "kitchen") loadKitchen();
-    if (type === "wardrobe") loadWardrobe();
-};
-
-renderCategoryGrid();
-warmCategoryThumbnails();
 loadTV();
 </script>
 
