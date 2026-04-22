@@ -2,6 +2,7 @@ const loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
     const LOGIN_API_URL = "https://69df293ed6de26e11928a3ce.mockapi.io/login_page";
+    const pageParams = new URLSearchParams(window.location.search);
     const usernameInput = document.getElementById("username");
     const passwordInput = document.getElementById("password");
     const togglePasswordButton = document.getElementById("togglePassword");
@@ -9,6 +10,20 @@ if (loginForm) {
     const usernameError = document.getElementById("usernameError");
     const passwordError = document.getElementById("passwordError");
     const submitButton = loginForm.querySelector(".login-button");
+
+    function getRedirectTarget() {
+        const redirect = (pageParams.get("redirect") || "").trim();
+
+        if (!redirect) {
+            return "dashboard.html";
+        }
+
+        if (/^(?:[a-z]+:)?\/\//i.test(redirect) || redirect.toLowerCase().startsWith("javascript:")) {
+            return "dashboard.html";
+        }
+
+        return redirect;
+    }
 
     function setMessage(text, type = "") {
         formMessage.textContent = text;
@@ -115,7 +130,7 @@ if (loginForm) {
                 username: matchedUser.username,
             }));
             await showAlert("success", "Login successful", `Welcome back, ${matchedUser.username}.`);
-            window.location.href = "dashboard.html";
+            window.location.href = getRedirectTarget();
         } catch (error) {
             setMessage(error.message || "Unable to verify login right now.", "error");
             await showAlert("error", "Service error", error.message || "Unable to verify login right now.");

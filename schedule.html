@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FurniSpace Schedule</title>
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --text: #211d1a;
+            --muted: #6b6258;
+            --line: rgba(91, 74, 56, 0.12);
+            --surface: rgba(255, 249, 242, 0.82);
+            --surface-strong: #fbf7f1;
+            --accent: #9a6f37;
+            --available-strong: #205340;
+            --available-soft: #dcefe3;
+            --unavailable-strong: #a83e2d;
+            --unavailable-soft: #f8e1db;
+            --pending-strong: #9a5c00;
+            --pending-soft: #f8e7bf;
+            --shadow: 0 24px 60px rgba(62, 42, 20, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Manrope", sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(255, 255, 255, 0.42), transparent 22%),
+                linear-gradient(135deg, #efe6d9 0%, #e8ddcf 52%, #f4eee7 100%);
+        }
+
+        .page-shell {
+            width: min(1360px, calc(100% - 24px));
+            margin: 12px auto;
+            display: grid;
+            gap: 18px;
+        }
+
+        .panel {
+            background: var(--surface);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 28px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 20px 22px;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-mark {
+            width: 56px;
+            height: 56px;
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-family: "Cormorant Garamond", serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(180deg, #252728 0%, #161718 100%);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+        }
+
+        .brand-copy {
+            display: grid;
+            gap: 2px;
+        }
+
+        .brand-copy h1,
+        .entries-head h3 {
+            margin: 0;
+            font-family: "Cormorant Garamond", serif;
+        }
+
+        .brand-copy h1 {
+            font-size: 1.08rem;
+        }
+
+        .brand-copy p,
+        .week-note,
+        .entries-head p {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .topbar-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-button,
+        .week-button,
+        .book-slot-button {
+            border: 0;
+            cursor: pointer;
+            font: inherit;
+            font-weight: 800;
+            text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+        }
+
+        .nav-button,
+        .week-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 46px;
+            padding: 0 18px;
+            border-radius: 999px;
+            background: #efe5d7;
+            color: var(--text);
+        }
+
+        .nav-button.primary,
+        .book-slot-button {
+            color: #fff;
+            background: linear-gradient(135deg, #205340 0%, #31755a 100%);
+            box-shadow: 0 14px 28px rgba(32, 83, 64, 0.16);
+        }
+
+        .nav-button:hover,
+        .week-button:hover,
+        .book-slot-button:hover {
+            transform: translateY(-1px);
+        }
+
+        .eyebrow {
+            margin: 0 0 12px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            font-size: 0.72rem;
+            font-weight: 800;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            align-self: end;
+        }
+
+        .stat-card {
+            padding: 16px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(91, 74, 56, 0.08);
+        }
+
+        .stat-card span {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--muted);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 800;
+        }
+
+        .stat-card strong {
+            font-size: 1.3rem;
+            line-height: 1.1;
+        }
+
+        .schedule-panel {
+            padding: 22px;
+            display: grid;
+            gap: 18px;
+        }
+
+        .schedule-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .schedule-head-copy {
+            display: grid;
+            gap: 8px;
+        }
+
+        .schedule-head-copy h3 {
+            margin: 0;
+            font-size: 1.15rem;
+        }
+
+        .week-note {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            max-width: 65ch;
+        }
+
+        .week-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .week-range {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 46px;
+            padding: 0 16px;
+            border-radius: 999px;
+            background: #fff;
+            border: 1px solid rgba(91, 74, 56, 0.12);
+            font-weight: 800;
+        }
+
+        .legend {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .legend-chip,
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 34px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+        }
+
+        .legend-chip.available,
+        .status-pill.available {
+            background: var(--available-soft);
+            color: var(--available-strong);
+        }
+
+        .legend-chip.unavailable,
+        .status-pill.unavailable {
+            background: var(--unavailable-soft);
+            color: var(--unavailable-strong);
+        }
+
+        .legend-chip.pending,
+        .status-pill.pending {
+            background: var(--pending-soft);
+            color: var(--pending-strong);
+        }
+
+        .week-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .day-card {
+            display: grid;
+            gap: 14px;
+            padding: 16px;
+            border-radius: 24px;
+            border: 1px solid rgba(91, 74, 56, 0.08);
+            min-width: 0;
+        }
+
+        .day-card.available {
+            background: linear-gradient(180deg, rgba(220, 239, 227, 0.92), rgba(247, 251, 248, 0.98));
+        }
+
+        .day-card.unavailable {
+            background: linear-gradient(180deg, rgba(248, 225, 219, 0.92), rgba(253, 248, 246, 0.98));
+        }
+
+        .day-card.pending {
+            background: linear-gradient(180deg, rgba(248, 231, 191, 0.94), rgba(255, 251, 240, 0.98));
+        }
+
+        .day-card-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .day-card-title {
+            display: grid;
+            gap: 4px;
+        }
+
+        .day-card-title strong {
+            font-size: 1rem;
+        }
+
+        .day-card-title span {
+            color: var(--muted);
+            font-size: 0.82rem;
+        }
+
+        .day-card-copy {
+            margin: 0;
+            font-size: 0.92rem;
+            line-height: 1.65;
+        }
+
+        .day-slots {
+            display: grid;
+            gap: 8px;
+        }
+
+        .day-slot {
+            padding: 10px 12px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(91, 74, 56, 0.08);
+        }
+
+        .day-slot strong,
+        .day-slot span {
+            display: block;
+        }
+
+        .day-slot strong {
+            font-size: 0.88rem;
+        }
+
+        .slot-meta-list {
+            display: grid;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .slot-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .slot-meta-text {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+            color: var(--muted);
+            font-size: 0.8rem;
+            line-height: 1.45;
+        }
+
+        .slot-meta-text span {
+            margin: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .slot-icon {
+            width: 16px;
+            height: 16px;
+            flex: 0 0 auto;
+        }
+
+        .slot-note {
+            display: block;
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 0.8rem;
+            line-height: 1.45;
+        }
+
+        .book-slot-button {
+            min-height: 42px;
+            width: 100%;
+            border-radius: 999px;
+        }
+
+        .booking-modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            background: rgba(26, 21, 16, 0.42);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+        }
+
+        .booking-modal.show {
+            display: flex;
+        }
+
+        .booking-dialog {
+            width: min(100%, 460px);
+            padding: 22px;
+            border-radius: 26px;
+            background: rgba(255, 249, 242, 0.96);
+            border: 1px solid rgba(255, 255, 255, 0.74);
+            box-shadow: 0 28px 60px rgba(37, 26, 16, 0.18);
+        }
+
+        .booking-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .booking-head h3 {
+            margin: 0;
+            font-family: "Cormorant Garamond", serif;
+            font-size: 2rem;
+            line-height: 0.95;
+        }
+
+        .booking-head p {
+            margin: 8px 0 0;
+            color: var(--muted);
+            font-size: 0.92rem;
+            line-height: 1.55;
+        }
+
+        .booking-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 999px;
+            border: 0;
+            cursor: pointer;
+            font: inherit;
+            font-size: 1.3rem;
+            color: var(--text);
+            background: #efe5d7;
+            flex: 0 0 auto;
+        }
+
+        .booking-form {
+            display: grid;
+            gap: 14px;
+        }
+
+        .field {
+            display: grid;
+            gap: 6px;
+        }
+
+        .field span {
+            font-size: 0.84rem;
+            font-weight: 700;
+        }
+
+        .field input,
+        .field select {
+            height: 48px;
+            padding: 0 14px;
+            border-radius: 14px;
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.78);
+            font: inherit;
+            color: var(--text);
+            outline: none;
+        }
+
+        .field input:focus,
+        .field select:focus {
+            border-color: rgba(154, 111, 55, 0.48);
+            box-shadow: 0 0 0 4px rgba(154, 111, 55, 0.12);
+        }
+
+        .booking-date-pill {
+            display: inline-flex;
+            align-items: center;
+            min-height: 38px;
+            padding: 0 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.84);
+            border: 1px solid rgba(91, 74, 56, 0.08);
+            font-size: 0.84rem;
+            font-weight: 800;
+            color: var(--text);
+            width: fit-content;
+        }
+
+        .booking-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+
+        .booking-actions > * {
+            flex: 1 1 180px;
+        }
+
+        .booking-button {
+            min-height: 46px;
+            border: 0;
+            cursor: pointer;
+            border-radius: 999px;
+            font: inherit;
+            font-weight: 800;
+        }
+
+        .booking-button.secondary {
+            background: #efe5d7;
+            color: var(--text);
+        }
+
+        .booking-button.primary {
+            background: linear-gradient(135deg, #205340 0%, #31755a 100%);
+            color: #fff;
+            box-shadow: 0 14px 28px rgba(32, 83, 64, 0.14);
+        }
+
+        .booking-message {
+            min-height: 20px;
+            margin: 0;
+            font-size: 0.84rem;
+            font-weight: 700;
+        }
+
+        .booking-message.error {
+            color: var(--unavailable-strong);
+        }
+
+        .booking-message.success {
+            color: var(--available-strong);
+        }
+
+        .entries-panel {
+            padding: 22px;
+            display: grid;
+            gap: 16px;
+        }
+
+        .site-footer {
+            padding: 22px;
+            display: grid;
+            gap: 18px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.35fr) repeat(3, minmax(170px, 0.72fr));
+            gap: 22px;
+        }
+
+        .footer-brand {
+            display: grid;
+            gap: 10px;
+        }
+
+        .footer-kicker {
+            display: inline-flex;
+            width: fit-content;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(91, 74, 56, 0.08);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--accent);
+        }
+
+        .footer-brand h3,
+        .footer-links h4 {
+            margin: 0;
+            font-family: "Cormorant Garamond", serif;
+        }
+
+        .footer-brand h3 {
+            font-size: 2rem;
+            line-height: 0.95;
+        }
+
+        .footer-brand p,
+        .footer-bottom p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .footer-links {
+            display: grid;
+            align-content: start;
+            gap: 10px;
+        }
+
+        .footer-contact-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .footer-contact-card {
+            display: grid;
+            gap: 6px;
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.78);
+            border: 1px solid rgba(91, 74, 56, 0.08);
+        }
+
+        .footer-contact-card strong {
+            font-size: 15px;
+            color: var(--text);
+        }
+
+        .footer-contact-card a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .footer-contact-card a:hover {
+            color: #174832;
+        }
+
+        .footer-links h4 {
+            font-size: 0.95rem;
+        }
+
+        .footer-links a,
+        .footer-bottom a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .footer-links a:hover,
+        .footer-bottom a:hover {
+            color: var(--accent);
+        }
+
+        .footer-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .footer-badge {
+            display: inline-flex;
+            align-items: center;
+            min-height: 34px;
+            padding: 0 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.78);
+            border: 1px solid rgba(91, 74, 56, 0.08);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .footer-bottom {
+            padding-top: 16px;
+            border-top: 1px solid rgba(91, 74, 56, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .entries-head {
+            display: grid;
+            gap: 6px;
+        }
+
+        .entries-head h3 {
+            font-size: 1.1rem;
+        }
+
+        .entries-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .entry-item,
+        .empty-state {
+            padding: 16px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(91, 74, 56, 0.08);
+        }
+
+        .entry-item {
+            display: grid;
+            grid-template-columns: minmax(140px, 180px) minmax(0, 1fr) auto;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .entry-date {
+            display: grid;
+            gap: 4px;
+        }
+
+        .entry-copy {
+            display: grid;
+            gap: 8px;
+        }
+
+        .entry-date strong,
+        .entry-copy strong {
+            display: block;
+        }
+
+        .entry-date span,
+        .entry-copy > span {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 0.84rem;
+            line-height: 1.45;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--muted);
+        }
+
+        @media (max-width: 1080px) {
+            .week-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .entry-item {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .page-shell {
+                width: calc(100% - 14px);
+                margin: 7px auto;
+                gap: 14px;
+            }
+
+            .panel,
+            .topbar,
+            .schedule-panel,
+            .entries-panel,
+            .site-footer {
+                border-radius: 22px;
+            }
+
+            .topbar,
+            .schedule-panel,
+            .entries-panel,
+            .site-footer {
+                padding: 18px;
+            }
+
+            .stats-grid,
+            .week-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar-actions,
+            .week-toolbar {
+                width: 100%;
+            }
+
+            .nav-button,
+            .week-button {
+                width: 100%;
+            }
+
+            .day-card-head {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .booking-dialog {
+                padding: 18px;
+                border-radius: 22px;
+            }
+
+            .booking-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="page-shell">
+        <header class="panel topbar">
+            <div class="brand">
+                <div class="logo-mark">F</div>
+                <div class="brand-copy">
+                    <h1>FurniSpace Schedule</h1>
+                    <p>Carpenter availability and booking view</p>
+                </div>
+            </div>
+
+            <div class="topbar-actions">
+                <a class="nav-button" href="index.html">Home</a>
+                <a class="nav-button primary" href="dashboard.html?collection=schedule">Open dashboard</a>
+            </div>
+        </header>
+
+        <section class="panel schedule-panel">
+            <div class="schedule-head">
+                <div class="schedule-head-copy">
+                    <p class="eyebrow">Week view</p>
+                    <h3>Weekly availability board</h3>
+                    <p class="week-note">Monday to Friday shows <strong>Not Available</strong> when there is no entry. Saturday and Sunday shows <strong>Available</strong> when there is no entry. If a saved record exists, that record decides the status.</p>
+                </div>
+
+                <div class="week-toolbar">
+                    <button class="week-button" id="prevWeekButton" type="button">Previous week</button>
+                    <span class="week-range" id="weekRangeLabel">Week range</span>
+                    <button class="week-button" id="currentWeekButton" type="button">This week</button>
+                    <button class="week-button" id="nextWeekButton" type="button">Next week</button>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <article class="stat-card">
+                    <span>Week range</span>
+                    <strong id="statWeekRange">-</strong>
+                </article>
+                <article class="stat-card">
+                    <span>Available days</span>
+                    <strong id="statAvailableDays">0</strong>
+                </article>
+                <article class="stat-card">
+                    <span>Booked entries</span>
+                    <strong id="statBookedEntries">0</strong>
+                </article>
+            </div>
+
+            <div class="legend">
+                <span class="legend-chip unavailable">Not Available</span>
+                <span class="legend-chip pending">Pending</span>
+                <span class="legend-chip available">Available</span>
+            </div>
+
+            <div class="week-grid" id="weekGrid">
+                <div class="empty-state">Loading schedule...</div>
+            </div>
+        </section>
+
+        <section class="panel entries-panel">
+            <div class="entries-head">
+                <p class="eyebrow">Entry list</p>
+                <h3>Saved schedule entries for this week</h3>
+                <p>Use this list to check every saved time slot, carpenter name, and work note for the selected week.</p>
+            </div>
+
+            <div class="entries-list" id="entriesList">
+                <div class="empty-state">Loading entries...</div>
+            </div>
+        </section>
+
+        <footer class="panel site-footer">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <span class="footer-kicker">FurniSpace Studio</span>
+                    <h3>Keep booking, planning, and site execution aligned week by week.</h3>
+                    <p>Use the weekly planner for customer-side booking, then move into the dashboard when the studio needs to manage assignments, records, and follow-up actions.</p>
+                    <div class="footer-badges">
+                        <span class="footer-badge">Weekly planning</span>
+                        <span class="footer-badge">Customer booking</span>
+                        <span class="footer-badge">Execution flow</span>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <a href="index.html">Collections</a>
+                    <a href="estimate.html?category=TV%20Unit">Estimate</a>
+                    <a href="dashboard.html?collection=schedule">Dashboard schedule</a>
+                    <a href="login.html">Studio login</a>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Workflow</h4>
+                    <a href="schedule.html">Weekly planner</a>
+                    <a href="index.html">Browse furniture</a>
+                    <a href="estimate.html?category=Bedroom">Compare pricing</a>
+                    <a href="dashboard.html">Manage records</a>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Contact</h4>
+                    <div class="footer-contact-list">
+                        <div class="footer-contact-card">
+                            <strong>Ashokbhai Dharvaparmar</strong>
+                            <a href="tel:9979884927">9979884927</a>
+                        </div>
+                        <div class="footer-contact-card">
+                            <strong>Yash Dharvaparmar</strong>
+                            <a href="tel:9023517088">9023517088</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>Designed for smooth handoff from inquiry to execution.</p>
+                <a href="dashboard.html?collection=schedule">Open studio dashboard</a>
+            </div>
+        </footer>
+    </main>
+
+    <div class="booking-modal" id="bookingModal" aria-hidden="true">
+        <div class="booking-dialog" role="dialog" aria-modal="true" aria-labelledby="bookingTitle">
+            <div class="booking-head">
+                <div>
+                    <h3 id="bookingTitle">Book slot</h3>
+                    <p>Enter your name, phone number, and preferred slot for this booking.</p>
+                </div>
+                <button class="booking-close" id="bookingCloseButton" type="button" aria-label="Close booking form">&times;</button>
+            </div>
+
+            <form class="booking-form" id="bookingForm" novalidate>
+                <div class="booking-date-pill" id="bookingDateLabel">Selected date</div>
+
+                <label class="field">
+                    <span>Name</span>
+                    <input id="bookingName" type="text" placeholder="Enter your name" autocomplete="name" required>
+                </label>
+
+                <label class="field">
+                    <span>Phone number</span>
+                    <input id="bookingPhone" type="tel" placeholder="Enter your phone number" autocomplete="tel" required>
+                </label>
+
+                <label class="field">
+                    <span>Preferred slot</span>
+                    <select id="bookingTime" required>
+                        <option value="Before 1 PM">Before 1 PM</option>
+                        <option value="After 1 PM">After 1 PM</option>
+                        <option value="Full day">Full day</option>
+                    </select>
+                </label>
+
+                <div class="booking-actions">
+                    <button class="booking-button secondary" id="bookingCancelButton" type="button">Cancel</button>
+                    <button class="booking-button primary" id="bookingSubmitButton" type="submit">Confirm booking</button>
+                </div>
+
+                <p class="booking-message" id="bookingMessage" aria-live="polite"></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const SCHEDULE_API_URL = "https://69e76b9c68208c1debe8d996.mockapi.io/Schedule";
+        const weekGrid = document.getElementById("weekGrid");
+        const entriesList = document.getElementById("entriesList");
+        const weekRangeLabel = document.getElementById("weekRangeLabel");
+        const statWeekRange = document.getElementById("statWeekRange");
+        const statAvailableDays = document.getElementById("statAvailableDays");
+        const statBookedEntries = document.getElementById("statBookedEntries");
+        const prevWeekButton = document.getElementById("prevWeekButton");
+        const currentWeekButton = document.getElementById("currentWeekButton");
+        const nextWeekButton = document.getElementById("nextWeekButton");
+        const bookingModal = document.getElementById("bookingModal");
+        const bookingForm = document.getElementById("bookingForm");
+        const bookingCloseButton = document.getElementById("bookingCloseButton");
+        const bookingCancelButton = document.getElementById("bookingCancelButton");
+        const bookingDateLabel = document.getElementById("bookingDateLabel");
+        const bookingNameInput = document.getElementById("bookingName");
+        const bookingPhoneInput = document.getElementById("bookingPhone");
+        const bookingTimeInput = document.getElementById("bookingTime");
+        const bookingSubmitButton = document.getElementById("bookingSubmitButton");
+        const bookingMessage = document.getElementById("bookingMessage");
+
+        const SCHEDULE_HALF_DAY_SLOT_KEYS = ["before_1_pm", "after_1_pm"];
+        const SCHEDULE_SLOT_LABELS = {
+            before_1_pm: "Before 1 PM",
+            after_1_pm: "After 1 PM",
+            full_day: "Full day",
+        };
+        const DEFAULT_BOOKING_SLOT = SCHEDULE_SLOT_LABELS.before_1_pm;
+
+        let currentRecords = [];
+        let activeWeekStart = startOfWeek(new Date());
+        let selectedBookingDate = "";
+
+        function escapeHtml(value) {
+            return String(value || "").replace(/[&<>"']/g, (character) => {
+                const replacements = {
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    "\"": "&quot;",
+                    "'": "&#39;",
+                };
+
+                return replacements[character];
+            });
+        }
+
+        function getScheduleIconMarkup(type) {
+            if (type === "person") {
+                return `
+                    <svg class="slot-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M12 12a4 4 0 1 0 0-8a4 4 0 0 0 0 8Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M5 20a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                `;
+            }
+
+            return "";
+        }
+
+        function normalizeValue(value) {
+            return String(value || "").trim().toLowerCase();
+        }
+
+        function parseDateValue(value) {
+            if (value instanceof Date) {
+                if (Number.isNaN(value.getTime())) {
+                    return null;
+                }
+
+                const dateCopy = new Date(value);
+                dateCopy.setHours(0, 0, 0, 0);
+                return dateCopy;
+            }
+
+            const rawValue = String(value || "").trim();
+
+            if (!rawValue) {
+                return null;
+            }
+
+            const parsedDate = rawValue.match(/^\d{4}-\d{2}-\d{2}$/)
+                ? new Date(`${rawValue}T00:00:00`)
+                : new Date(rawValue);
+
+            if (Number.isNaN(parsedDate.getTime())) {
+                return null;
+            }
+
+            parsedDate.setHours(0, 0, 0, 0);
+            return parsedDate;
+        }
+
+        function formatDateValue(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
+        }
+
+        function normalizeDateValue(value) {
+            const parsedDate = parseDateValue(value);
+            return parsedDate ? formatDateValue(parsedDate) : "";
+        }
+
+        function startOfWeek(date) {
+            const baseDate = parseDateValue(date) || new Date();
+            const day = baseDate.getDay();
+            const diff = day === 0 ? -6 : 1 - day;
+            baseDate.setDate(baseDate.getDate() + diff);
+            return baseDate;
+        }
+
+        function isWeekend(date) {
+            const day = date.getDay();
+            return day === 0 || day === 6;
+        }
+
+        function defaultAvailabilityForDate(dateValue) {
+            const parsedDate = parseDateValue(dateValue);
+            return parsedDate ? isWeekend(parsedDate) : false;
+        }
+
+        function normalizeAvailabilityValue(value) {
+            const normalized = normalizeValue(value).replace(/[_-]+/g, " ");
+
+            if (["available", "yes", "true", "free", "open"].includes(normalized)) {
+                return "available";
+            }
+
+            if (["not available", "notavailable", "unavailable", "busy", "booked", "no", "false", "occupied"].includes(normalized)) {
+                return "unavailable";
+            }
+
+            if (["pending", "pending approval", "awaiting approval", "requested"].includes(normalized)) {
+                return "pending";
+            }
+
+            return "";
+        }
+
+        function normalizeScheduleSlotKey(value) {
+            const normalized = normalizeValue(value).replace(/[_-]+/g, " ");
+
+            if (!normalized) {
+                return "full_day";
+            }
+
+            if (normalized.includes("full day") || normalized.includes("whole day")) {
+                return "full_day";
+            }
+
+            if (normalized.includes("before 1")) {
+                return "before_1_pm";
+            }
+
+            if (normalized.includes("after 1")) {
+                return "after_1_pm";
+            }
+
+            if (normalized.includes("morning")) {
+                return "before_1_pm";
+            }
+
+            if (normalized.includes("afternoon")) {
+                return "after_1_pm";
+            }
+
+            const timeMatch = normalized.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/);
+
+            if (!timeMatch) {
+                return "full_day";
+            }
+
+            let hours = Number(timeMatch[1]);
+            const meridian = timeMatch[3] || "";
+
+            if (meridian === "am") {
+                hours = hours === 12 ? 0 : hours;
+            } else if (meridian === "pm") {
+                hours = hours === 12 ? 12 : hours + 12;
+            }
+
+            return hours < 13 ? "before_1_pm" : "after_1_pm";
+        }
+
+        function getCoveredSlotKeysForRecord(record) {
+            const slotKey = normalizeScheduleSlotKey(record.time);
+            return slotKey === "full_day" ? [...SCHEDULE_HALF_DAY_SLOT_KEYS] : [slotKey];
+        }
+
+        function getScheduleStatusPriority(status) {
+            if (status === "unavailable") {
+                return 3;
+            }
+
+            if (status === "pending") {
+                return 2;
+            }
+
+            if (status === "available") {
+                return 1;
+            }
+
+            return 0;
+        }
+
+        function mergeScheduleSlotStatus(currentStatus, nextStatus) {
+            if (!currentStatus) {
+                return nextStatus;
+            }
+
+            return getScheduleStatusPriority(nextStatus) >= getScheduleStatusPriority(currentStatus)
+                ? nextStatus
+                : currentStatus;
+        }
+
+        function scheduleRecordStatus(record) {
+            const normalizedAvailability = normalizeAvailabilityValue(record.available);
+
+            if (normalizedAvailability) {
+                return normalizedAvailability;
+            }
+
+            const hasAssignment = Boolean(
+                String(record.person_name || "").trim()
+                || String(record.time || "").trim()
+                || String(record.work_name || record.work || "").trim()
+            );
+
+            if (hasAssignment) {
+                return "unavailable";
+            }
+
+            return defaultAvailabilityForDate(record.date) ? "available" : "unavailable";
+        }
+
+        function scheduleRecordIsAvailable(record) {
+            return scheduleRecordStatus(record) === "available";
+        }
+
+        function formatDateForDisplay(value, options) {
+            const parsedDate = parseDateValue(value);
+            return parsedDate ? new Intl.DateTimeFormat("en-IN", options).format(parsedDate) : (value || "-");
+        }
+
+        function getScheduleRecordDate(record) {
+            return normalizeDateValue(record.date);
+        }
+
+        function scheduleRecordsForDate(dateValue) {
+            return currentRecords.filter((record) => getScheduleRecordDate(record) === dateValue);
+        }
+
+        function getDateSlotStatuses(dateValue, records = scheduleRecordsForDate(dateValue)) {
+            const slotStatuses = {
+                before_1_pm: "",
+                after_1_pm: "",
+            };
+            const defaultStatus = defaultAvailabilityForDate(dateValue) ? "available" : "unavailable";
+
+            records.forEach((record) => {
+                const status = scheduleRecordStatus(record);
+
+                getCoveredSlotKeysForRecord(record).forEach((slotKey) => {
+                    slotStatuses[slotKey] = mergeScheduleSlotStatus(slotStatuses[slotKey], status);
+                });
+            });
+
+            SCHEDULE_HALF_DAY_SLOT_KEYS.forEach((slotKey) => {
+                if (!slotStatuses[slotKey]) {
+                    slotStatuses[slotKey] = defaultStatus;
+                }
+            });
+
+            return slotStatuses;
+        }
+
+        function getDayScheduleSummary(dateValue) {
+            const records = scheduleRecordsForDate(dateValue);
+            const slotStatuses = getDateSlotStatuses(dateValue, records);
+            const openSlotKeys = SCHEDULE_HALF_DAY_SLOT_KEYS.filter((slotKey) => slotStatuses[slotKey] === "available");
+            const pendingSlotKeys = SCHEDULE_HALF_DAY_SLOT_KEYS.filter((slotKey) => slotStatuses[slotKey] === "pending");
+
+            return {
+                status: openSlotKeys.length ? "available" : (pendingSlotKeys.length ? "pending" : "unavailable"),
+                records,
+                openSlotKeys,
+                openSlotLabels: openSlotKeys.map((slotKey) => SCHEDULE_SLOT_LABELS[slotKey]),
+                slotStatuses,
+            };
+        }
+
+        function getBookableSlotOptions(dateValue) {
+            const summary = getDayScheduleSummary(dateValue);
+            const slotOptions = summary.openSlotKeys.map((slotKey) => SCHEDULE_SLOT_LABELS[slotKey]);
+
+            if (summary.openSlotKeys.length === SCHEDULE_HALF_DAY_SLOT_KEYS.length) {
+                slotOptions.push(SCHEDULE_SLOT_LABELS.full_day);
+            }
+
+            return slotOptions;
+        }
+
+        function setBookingSlotOptions(dateValue, preferredValue = DEFAULT_BOOKING_SLOT) {
+            const slotOptions = getBookableSlotOptions(dateValue);
+
+            bookingTimeInput.innerHTML = slotOptions.map((slotValue) => `
+                <option value="${slotValue}">${slotValue}</option>
+            `).join("");
+
+            bookingTimeInput.disabled = !slotOptions.length;
+            bookingTimeInput.value = slotOptions.includes(preferredValue)
+                ? preferredValue
+                : (slotOptions[0] || "");
+        }
+
+        function getAvailabilityMeta(status) {
+            if (status === "pending") {
+                return {
+                    label: "Pending",
+                    className: "pending",
+                };
+            }
+
+            if (status === "available") {
+                return {
+                    label: "Available",
+                    className: "available",
+                };
+            }
+
+            return {
+                label: "Not Available",
+                className: "unavailable",
+            };
+        }
+
+        function getScheduleDefaultMessage(dateValue) {
+            return defaultAvailabilityForDate(dateValue)
+                ? "Weekend is open by default. You can book a slot for this day."
+                : "Weekday is blocked by default. Use the form only when work is assigned.";
+        }
+
+        function getWeekRecords() {
+            const weekStart = formatDateValue(activeWeekStart);
+            const weekEndDate = new Date(activeWeekStart);
+            weekEndDate.setDate(weekEndDate.getDate() + 6);
+            const weekEnd = formatDateValue(weekEndDate);
+
+            return currentRecords.filter((record) => {
+                const recordDate = getScheduleRecordDate(record);
+                return recordDate && recordDate >= weekStart && recordDate <= weekEnd;
+            }).sort((first, second) => {
+                const firstDate = `${getScheduleRecordDate(first)} ${first.time || ""}`;
+                const secondDate = `${getScheduleRecordDate(second)} ${second.time || ""}`;
+                return firstDate.localeCompare(secondDate);
+            });
+        }
+
+        function getSanitizedPhone(value) {
+            return String(value || "").trim().replace(/[^\d+]/g, "").replace(/(?!^)\+/g, "");
+        }
+
+        function showBookingMessage(text, type = "") {
+            bookingMessage.textContent = text;
+            bookingMessage.className = type ? `booking-message ${type}` : "booking-message";
+        }
+
+        function openBookingModal(dateValue) {
+            selectedBookingDate = dateValue;
+            bookingForm.reset();
+            setBookingSlotOptions(dateValue, DEFAULT_BOOKING_SLOT);
+            bookingDateLabel.textContent = formatDateForDisplay(dateValue, {
+                weekday: "long",
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+            });
+            showBookingMessage("");
+            bookingSubmitButton.disabled = false;
+            bookingSubmitButton.textContent = "Confirm booking";
+            bookingModal.classList.add("show");
+            bookingModal.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+            bookingNameInput.focus();
+        }
+
+        function closeBookingModal() {
+            bookingModal.classList.remove("show");
+            bookingModal.setAttribute("aria-hidden", "true");
+            document.body.style.overflow = "";
+            selectedBookingDate = "";
+            bookingForm.reset();
+            bookingTimeInput.disabled = false;
+            showBookingMessage("");
+            bookingSubmitButton.disabled = false;
+            bookingSubmitButton.textContent = "Confirm booking";
+        }
+
+        function renderEntriesList() {
+            const weekRecords = getWeekRecords();
+            statBookedEntries.textContent = String(weekRecords.length);
+
+            if (!weekRecords.length) {
+                entriesList.innerHTML = `<div class="empty-state">No saved schedule entries for this week yet.</div>`;
+                return;
+            }
+
+            entriesList.innerHTML = weekRecords.map((record) => {
+                const status = scheduleRecordStatus(record);
+                const availabilityMeta = getAvailabilityMeta(status);
+                const workText = record.work_name || record.work || "Booked slot";
+                const personText = record.person_name || "Person not set";
+
+                return `
+                    <article class="entry-item">
+                        <div class="entry-date">
+                            <strong>${escapeHtml(formatDateForDisplay(record.date, { weekday: "long" }))}</strong>
+                            <span>${escapeHtml(formatDateForDisplay(record.date, { day: "2-digit", month: "long", year: "numeric" }))}</span>
+                            <span>${escapeHtml(record.time || "Time not set")}</span>
+                        </div>
+
+                        <div class="entry-copy">
+                            <div class="slot-meta-list">
+                                <div class="slot-meta">
+                                    <span class="slot-meta-text">
+                                        ${getScheduleIconMarkup("person")}
+                                        <span>${escapeHtml(personText)}</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <span>Note: ${escapeHtml(workText)}</span>
+                        </div>
+
+                        <span class="status-pill ${availabilityMeta.className}">${availabilityMeta.label}</span>
+                    </article>
+                `;
+            }).join("");
+        }
+
+        function renderWeekBoard() {
+            const weekStart = new Date(activeWeekStart);
+            const weekEnd = new Date(activeWeekStart);
+            weekEnd.setDate(weekEnd.getDate() + 6);
+
+            const weekRangeText = `${formatDateForDisplay(weekStart, { day: "2-digit", month: "short" })} - ${formatDateForDisplay(weekEnd, { day: "2-digit", month: "short", year: "numeric" })}`;
+            weekRangeLabel.textContent = weekRangeText;
+            statWeekRange.textContent = weekRangeText;
+
+            let availableDays = 0;
+
+            weekGrid.innerHTML = Array.from({ length: 7 }, (_, index) => {
+                const date = new Date(weekStart);
+                date.setDate(weekStart.getDate() + index);
+
+                const dateValue = formatDateValue(date);
+                const summary = getDayScheduleSummary(dateValue);
+                const availabilityMeta = getAvailabilityMeta(summary.status);
+                const safeDateValue = escapeHtml(dateValue);
+                const openSlotNote = summary.records.length && summary.openSlotLabels.length
+                    ? `<p class="day-card-copy">Open slot: ${escapeHtml(summary.openSlotLabels.join(" / "))}</p>`
+                    : "";
+
+                if (summary.status !== "unavailable") {
+                    availableDays += 1;
+                }
+
+                const slotsMarkup = summary.records.length
+                    ? `
+                        <div class="day-slots">
+                            ${summary.records.slice(0, 2).map((record) => {
+                                const timeText = record.time || "Time not set";
+                                const personText = record.person_name || "Person not set";
+                                const workText = record.work_name || record.work || "";
+                                const status = scheduleRecordStatus(record);
+                                const noteText = workText || (status === "pending"
+                                    ? "Booking request sent. Waiting for approval."
+                                    : (status === "available" ? "Marked available for booking." : "Booked slot."));
+
+                                return `
+                                    <div class="day-slot">
+                                        <strong>${escapeHtml(timeText)}</strong>
+                                        <div class="slot-meta-list">
+                                            <div class="slot-meta">
+                                                <span class="slot-meta-text">
+                                                    ${getScheduleIconMarkup("person")}
+                                                    <span>${escapeHtml(personText)}</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <span class="slot-note">${escapeHtml(noteText)}</span>
+                                    </div>
+                                `;
+                            }).join("")}
+                            ${summary.records.length > 2 ? `<p class="day-card-copy">+${summary.records.length - 2} more slot entries in the list below.</p>` : ""}
+                        </div>
+                    `
+                    : `<p class="day-card-copy">${escapeHtml(getScheduleDefaultMessage(dateValue))}</p>`;
+
+                return `
+                    <article class="day-card ${availabilityMeta.className}">
+                        <div class="day-card-head">
+                            <div class="day-card-title">
+                                <strong>${escapeHtml(formatDateForDisplay(dateValue, { weekday: "long" }))}</strong>
+                                <span>${escapeHtml(formatDateForDisplay(dateValue, { day: "2-digit", month: "long", year: "numeric" }))}</span>
+                            </div>
+                            <span class="status-pill ${availabilityMeta.className}">${availabilityMeta.label}</span>
+                        </div>
+
+                        ${slotsMarkup}
+                        ${openSlotNote}
+
+                        ${summary.openSlotKeys.length ? `<button class="book-slot-button" type="button" data-date="${safeDateValue}">Book slot</button>` : ""}
+                    </article>
+                `;
+            }).join("");
+
+            statAvailableDays.textContent = String(availableDays);
+            renderEntriesList();
+        }
+
+        async function loadSchedule() {
+            weekGrid.innerHTML = `<div class="empty-state">Loading schedule...</div>`;
+            entriesList.innerHTML = `<div class="empty-state">Loading entries...</div>`;
+
+            try {
+                const response = await fetch(SCHEDULE_API_URL, {
+                    headers: {
+                        Accept: "application/json",
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error("Unable to load schedule.");
+                }
+
+                const records = await response.json();
+                currentRecords = Array.isArray(records) ? records : [];
+                renderWeekBoard();
+            } catch (error) {
+                weekGrid.innerHTML = `<div class="empty-state">${escapeHtml(error.message || "Unable to load schedule.")}</div>`;
+                entriesList.innerHTML = `<div class="empty-state">${escapeHtml(error.message || "Unable to load entries.")}</div>`;
+                statAvailableDays.textContent = "0";
+                statBookedEntries.textContent = "0";
+            }
+        }
+
+        async function submitBooking(event) {
+            event.preventDefault();
+
+            const name = bookingNameInput.value.trim();
+            const phone = bookingPhoneInput.value.trim();
+            const time = bookingTimeInput.value;
+            const sanitizedPhone = getSanitizedPhone(phone);
+
+            if (!selectedBookingDate) {
+                showBookingMessage("Please choose a date again.", "error");
+                return;
+            }
+
+            if (!name || !phone || !time) {
+                showBookingMessage("Name, phone number, and preferred slot are required.", "error");
+                return;
+            }
+
+            if (sanitizedPhone.replace(/\D/g, "").length < 7) {
+                showBookingMessage("Please enter a valid phone number.", "error");
+                return;
+            }
+
+            if (getDayScheduleSummary(selectedBookingDate).status === "unavailable") {
+                showBookingMessage("This day is no longer available for booking.", "error");
+                return;
+            }
+
+            const bookableSlotOptions = getBookableSlotOptions(selectedBookingDate);
+
+            if (!bookableSlotOptions.includes(time)) {
+                showBookingMessage("This slot is no longer available for booking.", "error");
+                setBookingSlotOptions(selectedBookingDate, DEFAULT_BOOKING_SLOT);
+                return;
+            }
+
+            bookingSubmitButton.disabled = true;
+            bookingSubmitButton.textContent = "Saving...";
+            showBookingMessage("");
+
+            try {
+                const response = await fetch(SCHEDULE_API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        date: selectedBookingDate,
+                        time,
+                        person_name: name,
+                        phone_no: phone,
+                        work_name: "Pending approval",
+                        available: "Pending",
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error("Unable to book this slot.");
+                }
+
+                showBookingMessage("Booking request sent. Waiting for approval.", "success");
+                await loadSchedule();
+                window.setTimeout(() => {
+                    closeBookingModal();
+                }, 400);
+            } catch (error) {
+                bookingSubmitButton.disabled = false;
+                bookingSubmitButton.textContent = "Confirm booking";
+                showBookingMessage(error.message || "Unable to book this slot.", "error");
+            }
+        }
+
+        weekGrid.addEventListener("click", (event) => {
+            const button = event.target.closest("button[data-date]");
+
+            if (!button) {
+                return;
+            }
+
+            openBookingModal(button.dataset.date || "");
+        });
+
+        prevWeekButton.addEventListener("click", () => {
+            const nextStart = new Date(activeWeekStart);
+            nextStart.setDate(nextStart.getDate() - 7);
+            activeWeekStart = nextStart;
+            renderWeekBoard();
+        });
+
+        currentWeekButton.addEventListener("click", () => {
+            activeWeekStart = startOfWeek(new Date());
+            renderWeekBoard();
+        });
+
+        nextWeekButton.addEventListener("click", () => {
+            const nextStart = new Date(activeWeekStart);
+            nextStart.setDate(nextStart.getDate() + 7);
+            activeWeekStart = nextStart;
+            renderWeekBoard();
+        });
+
+        bookingForm.addEventListener("submit", submitBooking);
+
+        bookingCloseButton.addEventListener("click", closeBookingModal);
+        bookingCancelButton.addEventListener("click", closeBookingModal);
+
+        bookingModal.addEventListener("click", (event) => {
+            if (event.target === bookingModal) {
+                closeBookingModal();
+            }
+        });
+
+        window.addEventListener("keydown", (event) => {
+            if (event.key === "Escape" && bookingModal.classList.contains("show")) {
+                closeBookingModal();
+            }
+        });
+
+        loadSchedule();
+    </script>
+</body>
+</html>

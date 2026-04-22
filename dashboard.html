@@ -21,6 +21,12 @@
             --danger-soft: #f8e1db;
             --success: #245742;
             --success-soft: #dcefe3;
+            --available-strong: #205340;
+            --available-soft: #dcefe3;
+            --unavailable-strong: #a83e2d;
+            --unavailable-soft: #f8e1db;
+            --pending-strong: #9a5c00;
+            --pending-soft: #f8e7bf;
             --shadow: 0 22px 50px rgba(62, 42, 20, 0.12);
         }
 
@@ -188,11 +194,35 @@
         }
 
         .tab-button {
+            position: relative;
             padding: 12px 16px;
             border-radius: 999px;
             background: #efe5d7;
             color: var(--text);
             white-space: nowrap;
+        }
+
+        .tab-badge {
+            position: absolute;
+            top: -8px;
+            right: -6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 22px;
+            height: 22px;
+            padding: 0 6px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #d0891e 0%, #9a5c00 100%);
+            color: #fff;
+            font-size: 0.72rem;
+            font-weight: 800;
+            box-shadow: 0 10px 18px rgba(154, 92, 0, 0.22);
+        }
+
+        .tab-button.active .tab-badge {
+            background: linear-gradient(135deg, #f4c768 0%, #cf8924 100%);
+            color: #2e2314;
         }
 
         .tab-button.active {
@@ -238,12 +268,22 @@
             gap: 6px;
         }
 
+        .is-hidden {
+            display: none !important;
+        }
+
+        .field-stack {
+            display: grid;
+            gap: 14px;
+        }
+
         .field span {
             font-size: 0.84rem;
             font-weight: 700;
         }
 
-        .field input {
+        .field input,
+        .field select {
             height: 50px;
             padding: 0 14px;
             border-radius: 14px;
@@ -254,7 +294,8 @@
             outline: none;
         }
 
-        .field input:focus {
+        .field input:focus,
+        .field select:focus {
             border-color: rgba(166, 124, 66, 0.54);
             box-shadow: 0 0 0 4px rgba(166, 124, 66, 0.12);
         }
@@ -329,6 +370,135 @@
             min-width: 0;
         }
 
+        .site-footer {
+            padding: 22px;
+            display: grid;
+            gap: 18px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.35fr) repeat(3, minmax(170px, 0.72fr));
+            gap: 22px;
+        }
+
+        .footer-brand {
+            display: grid;
+            gap: 10px;
+        }
+
+        .footer-kicker {
+            display: inline-flex;
+            width: fit-content;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(91, 74, 56, 0.08);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--accent);
+        }
+
+        .footer-brand h3,
+        .footer-links h4 {
+            margin: 0;
+            font-family: "Cormorant Garamond", serif;
+        }
+
+        .footer-brand h3 {
+            font-size: 2rem;
+            line-height: 0.95;
+        }
+
+        .footer-brand p,
+        .footer-bottom p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .footer-links {
+            display: grid;
+            align-content: start;
+            gap: 10px;
+        }
+
+        .footer-contact-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .footer-contact-card {
+            display: grid;
+            gap: 6px;
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.78);
+            border: 1px solid rgba(91, 74, 56, 0.08);
+        }
+
+        .footer-contact-card strong {
+            font-size: 15px;
+            color: var(--text);
+        }
+
+        .footer-contact-card a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .footer-contact-card a:hover {
+            color: #174832;
+        }
+
+        .footer-links h4 {
+            font-size: 0.95rem;
+        }
+
+        .footer-links a,
+        .footer-bottom a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .footer-links a:hover,
+        .footer-bottom a:hover {
+            color: var(--accent);
+        }
+
+        .footer-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .footer-badge {
+            display: inline-flex;
+            align-items: center;
+            min-height: 34px;
+            padding: 0 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.78);
+            border: 1px solid rgba(91, 74, 56, 0.08);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .footer-bottom {
+            padding-top: 16px;
+            border-top: 1px solid rgba(91, 74, 56, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
         .panel-head {
             display: flex;
             align-items: flex-end;
@@ -345,11 +515,105 @@
             margin-bottom: 18px;
         }
 
+        .stats-row.schedule-mode {
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+        }
+
+        .records-filter {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 18px;
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.54);
+            border: 1px solid rgba(91, 74, 56, 0.08);
+        }
+
+        .records-filter.is-hidden {
+            display: none;
+        }
+
+        .records-filter span {
+            color: var(--muted);
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tools {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-input {
+            flex: 1 1 280px;
+            min-width: 0;
+            height: 46px;
+            padding: 0 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(91, 74, 56, 0.12);
+            background: #fff;
+            color: var(--text);
+            font: inherit;
+            outline: none;
+        }
+
+        .filter-input:focus {
+            border-color: rgba(166, 124, 66, 0.54);
+            box-shadow: 0 0 0 4px rgba(166, 124, 66, 0.12);
+        }
+
+        .filter-note {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.82rem;
+            line-height: 1.5;
+        }
+
+        .filter-chip {
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(91, 74, 56, 0.12);
+            background: #fff;
+            color: var(--text);
+            cursor: pointer;
+            font: inherit;
+            font-weight: 700;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+        }
+
+        .filter-chip:hover {
+            transform: translateY(-1px);
+        }
+
+        .filter-chip.active {
+            color: #fff;
+            border-color: transparent;
+            background: linear-gradient(135deg, #252321 0%, #433726 100%);
+            box-shadow: 0 12px 24px rgba(48, 35, 20, 0.12);
+        }
+
         .stat-card {
             padding: 16px;
             border-radius: 18px;
             background: var(--surface-strong);
             border: 1px solid rgba(91, 74, 56, 0.08);
+        }
+
+        .stat-card.is-hidden {
+            display: none;
+        }
+
+        .stat-card.pending-stat {
+            background: linear-gradient(180deg, rgba(248, 231, 191, 0.68), rgba(255, 250, 241, 0.96));
         }
 
         .stat-card span {
@@ -363,6 +627,10 @@
             font-size: 1.25rem;
             line-height: 1.2;
             word-break: break-word;
+        }
+
+        .stat-card.pending-stat strong {
+            color: var(--pending-strong);
         }
 
         .table-wrap {
@@ -430,6 +698,242 @@
             color: var(--danger);
         }
 
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 34px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+        }
+
+        .status-pill.available {
+            background: var(--available-soft);
+            color: var(--available-strong);
+        }
+
+        .status-pill.unavailable {
+            background: var(--unavailable-soft);
+            color: var(--unavailable-strong);
+        }
+
+        .status-pill.pending {
+            background: var(--pending-soft);
+            color: var(--pending-strong);
+        }
+
+        .week-panel {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 18px;
+            padding: 16px;
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(91, 74, 56, 0.08);
+        }
+
+        .week-panel.is-hidden {
+            display: none;
+        }
+
+        .week-panel-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .week-panel-copy {
+            display: grid;
+            gap: 6px;
+        }
+
+        .week-panel-copy h3 {
+            margin: 0;
+            font-size: 1.05rem;
+        }
+
+        .week-panel-copy p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.88rem;
+            line-height: 1.55;
+        }
+
+        .week-nav {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .week-range {
+            display: inline-flex;
+            align-items: center;
+            min-height: 44px;
+            padding: 0 16px;
+            border-radius: 999px;
+            background: #fff;
+            border: 1px solid rgba(91, 74, 56, 0.12);
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .week-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .day-card {
+            display: grid;
+            gap: 14px;
+            padding: 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(91, 74, 56, 0.08);
+            min-width: 0;
+        }
+
+        .day-card.available {
+            background: linear-gradient(180deg, rgba(220, 239, 227, 0.92), rgba(247, 251, 248, 0.98));
+        }
+
+        .day-card.unavailable {
+            background: linear-gradient(180deg, rgba(248, 225, 219, 0.92), rgba(253, 248, 246, 0.98));
+        }
+
+        .day-card.pending {
+            background: linear-gradient(180deg, rgba(248, 231, 191, 0.94), rgba(255, 251, 240, 0.98));
+        }
+
+        .day-card-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .day-card-title {
+            display: grid;
+            gap: 4px;
+            min-width: 0;
+        }
+
+        .day-card-title strong {
+            font-size: 1rem;
+        }
+
+        .day-card-title span {
+            color: var(--muted);
+            font-size: 0.82rem;
+        }
+
+        .day-card-copy {
+            margin: 0;
+            color: var(--text);
+            font-size: 0.88rem;
+            line-height: 1.55;
+        }
+
+        .day-slots {
+            display: grid;
+            gap: 8px;
+        }
+
+        .day-slot {
+            padding: 10px 12px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(91, 74, 56, 0.08);
+        }
+
+        .day-slot strong,
+        .day-slot span {
+            display: block;
+        }
+
+        .day-slot strong {
+            font-size: 0.88rem;
+        }
+
+        .slot-meta-list {
+            display: grid;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .slot-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .slot-meta-text {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+            color: var(--muted);
+            font-size: 0.8rem;
+            line-height: 1.45;
+        }
+
+        .slot-meta-text span {
+            margin: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .slot-icon {
+            width: 16px;
+            height: 16px;
+            flex: 0 0 auto;
+        }
+
+        .slot-note {
+            display: block;
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 0.8rem;
+            line-height: 1.45;
+        }
+
+        .slot-call-link {
+            width: 34px;
+            height: 34px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--available-strong);
+            background: rgba(32, 83, 64, 0.12);
+            text-decoration: none;
+            transition: transform 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+            flex: 0 0 auto;
+        }
+
+        .slot-call-link:hover {
+            transform: translateY(-1px);
+            background: rgba(32, 83, 64, 0.18);
+        }
+
+        .slot-call-link svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .book-slot-button {
+            min-height: 42px;
+            background: linear-gradient(135deg, #205340 0%, #31755a 100%);
+            color: #fff;
+            box-shadow: 0 12px 24px rgba(32, 83, 64, 0.14);
+        }
+
         .empty-state {
             padding: 28px;
             text-align: center;
@@ -442,6 +946,14 @@
             }
 
             .stats-row {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .week-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
 
@@ -472,7 +984,8 @@
             .tabs-panel,
             .table-panel,
             .form-panel,
-            .topbar {
+            .topbar,
+            .site-footer {
                 padding: 18px;
             }
 
@@ -522,11 +1035,16 @@
             .tabs-panel,
             .table-panel,
             .form-panel,
-            .topbar {
+            .topbar,
+            .site-footer {
                 padding: 16px;
             }
 
             .stats-row {
+                grid-template-columns: 1fr;
+            }
+
+            .week-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -599,7 +1117,8 @@
                 line-height: 1.55;
             }
 
-            .field input {
+            .field input,
+            .field select {
                 height: 46px;
             }
 
@@ -770,7 +1289,8 @@
                 font-size: 0.84rem;
             }
 
-            .field input {
+            .field input,
+            .field select {
                 height: 44px;
                 padding: 0 12px;
             }
@@ -820,14 +1340,14 @@
                 </div>
                 <div class="brand-copy">
                     <h1>Auraline Furniture Dashboard</h1>
-                    <p>Manage TV, bedroom, mandir, kitchen, and wardrobe records.</p>
+                    <p>Manage product collections, estimate rates, and weekly carpenter schedules.</p>
                 </div>
             </div>
 
             <div class="topbar-actions">
                 <div class="welcome-copy">
                     <strong id="welcomeName">Welcome</strong>
-                    <p>Switch categories and run full CRUD from one panel.</p>
+                    <p>Switch collections, manage records, and plan carpenter slots from one panel.</p>
                 </div>
                 <button class="logout-button" id="logoutButton" type="button">Logout</button>
             </div>
@@ -847,17 +1367,84 @@
                 <form class="crud-form" id="crudForm" novalidate>
                     <input id="recordId" type="hidden">
 
-                    <label class="field">
+                    <label class="field" id="recordLabelField">
                         <span>Image title</span>
                         <input id="recordLabel" type="text" placeholder="Optional label for internal use">
                     </label>
 
-                    <label class="field">
+                    <label class="field" id="recordImageField">
                         <span>Image URL</span>
                         <input id="recordImage" type="url" placeholder="Paste image URL" required>
                     </label>
 
-                    <div class="preview-card">
+                    <div class="field-stack is-hidden" id="estimateFields">
+                        <label class="field">
+                            <span>Category name</span>
+                            <input id="estimateName" type="text" placeholder="Enter estimate category name">
+                        </label>
+
+                        <label class="field">
+                            <span>Plan</span>
+                            <select id="estimatePlan">
+                                <option value="Basic">Basic</option>
+                                <option value="primium">primium</option>
+                                <option value="Expence">Expence</option>
+                            </select>
+                        </label>
+
+                        <label class="field">
+                            <span>With material price</span>
+                            <input id="estimateWithPrice" type="number" min="0" step="0.01" placeholder="Enter with material rate">
+                        </label>
+
+                        <label class="field">
+                            <span>Without material price</span>
+                            <input id="estimateWithoutPrice" type="number" min="0" step="0.01" placeholder="Enter without material rate">
+                        </label>
+                    </div>
+
+                    <div class="field-stack is-hidden" id="scheduleFields">
+                        <label class="field">
+                            <span>Date</span>
+                            <input id="scheduleDate" type="date">
+                        </label>
+
+                        <label class="field">
+                            <span>Time slot</span>
+                            <input id="scheduleTime" type="text" list="scheduleTimeOptions" placeholder="Before 1 PM / After 1 PM / Full day">
+                            <datalist id="scheduleTimeOptions">
+                                <option value="Before 1 PM"></option>
+                                <option value="After 1 PM"></option>
+                                <option value="Full day"></option>
+                            </datalist>
+                        </label>
+
+                        <label class="field">
+                            <span>Person name</span>
+                            <input id="schedulePerson" type="text" placeholder="Enter carpenter name">
+                        </label>
+
+                        <label class="field">
+                            <span>Phone number</span>
+                            <input id="schedulePhone" type="tel" placeholder="Enter contact number">
+                        </label>
+
+                        <label class="field">
+                            <span>Work details</span>
+                            <input id="scheduleWork" type="text" placeholder="Optional work details">
+                        </label>
+
+                        <label class="field">
+                            <span>Availability</span>
+                            <select id="scheduleAvailability">
+                                <option value="Available">Available</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Not Available">Not Available</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div class="preview-card" id="previewCard">
                         <img id="previewImage" src="" alt="Preview">
                         <p id="previewText">Paste an image URL to preview it here.</p>
                     </div>
@@ -897,12 +1484,49 @@
                         <span>API status</span>
                         <strong id="apiStatus">Ready</strong>
                     </article>
+                    <article class="stat-card pending-stat is-hidden" id="pendingRequestsCard">
+                        <span>Pending requests</span>
+                        <strong id="pendingRequestsCount">0</strong>
+                    </article>
                 </div>
+
+                <div class="records-filter is-hidden" id="estimateFilterPanel">
+                    <span>Plan filter</span>
+                    <div class="filter-row" id="estimateFilterRow"></div>
+                </div>
+
+                <div class="records-filter is-hidden" id="scheduleFilterPanel">
+                    <span>Schedule filter</span>
+                    <div class="filter-tools">
+                        <input class="filter-input" id="scheduleSearchInput" type="search" placeholder="Search by date, time, person, phone, or work">
+                        <button class="secondary-button" id="scheduleFilterClearButton" type="button">Clear filter</button>
+                    </div>
+                    <div class="filter-row" id="scheduleAvailabilityRow"></div>
+                    <p class="filter-note" id="scheduleFilterNote">Use search to find a carpenter, phone number, date, time, or work details. Use chips to filter by availability.</p>
+                </div>
+
+                <section class="week-panel is-hidden" id="scheduleWeekPanel">
+                    <div class="week-panel-head">
+                        <div class="week-panel-copy">
+                            <h3>Weekly availability</h3>
+                            <p>Monday to Friday stays unavailable by default. Saturday and Sunday stay available until you book a slot or save an unavailable entry.</p>
+                        </div>
+
+                        <div class="week-nav">
+                            <button class="secondary-button" id="prevWeekButton" type="button">Previous week</button>
+                            <span class="week-range" id="weekRangeLabel">Week range</span>
+                            <button class="secondary-button" id="currentWeekButton" type="button">This week</button>
+                            <button class="secondary-button" id="nextWeekButton" type="button">Next week</button>
+                        </div>
+                    </div>
+
+                    <div class="week-grid" id="weekGrid"></div>
+                </section>
 
                 <div class="table-wrap">
                     <table>
                         <thead>
-                            <tr>
+                            <tr id="tableHeadRow">
                                 <th>ID</th>
                                 <th>Preview</th>
                                 <th>Image field</th>
@@ -919,6 +1543,56 @@
                 </div>
             </section>
         </section>
+
+        <footer class="panel site-footer">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <span class="footer-kicker">FurniSpace Studio</span>
+                    <h3>Control collections, estimates, and weekly execution from one operating panel.</h3>
+                    <p>Use the dashboard for record maintenance, pricing updates, and schedule coordination while keeping the public collection and booking pages in sync.</p>
+                    <div class="footer-badges">
+                        <span class="footer-badge">CRUD control</span>
+                        <span class="footer-badge">Estimate rates</span>
+                        <span class="footer-badge">Schedule management</span>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <a href="index.html">Collections</a>
+                    <a href="estimate.html?category=TV%20Unit">Estimate</a>
+                    <a href="schedule.html">Schedule</a>
+                    <a href="login.html">Login page</a>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Current flow</h4>
+                    <a href="dashboard.html?collection=tv">TV Unit records</a>
+                    <a href="dashboard.html?collection=estimate">Estimate records</a>
+                    <a href="dashboard.html?collection=schedule">Schedule records</a>
+                    <a href="schedule.html">Customer planner</a>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Contact</h4>
+                    <div class="footer-contact-list">
+                        <div class="footer-contact-card">
+                            <strong>Ashokbhai Dharvaparmar</strong>
+                            <a href="tel:9979884927">9979884927</a>
+                        </div>
+                        <div class="footer-contact-card">
+                            <strong>Yash Dharvaparmar</strong>
+                            <a href="tel:9023517088">9023517088</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>Built for day-to-day studio operations with cleaner handoff between pages.</p>
+                <a href="schedule.html">Open public planner</a>
+            </div>
+        </footer>
     </main>
 
     <script>
@@ -932,6 +1606,31 @@
                 label: "Bedroom",
                 url: "https://69df1758d6de26e119288636.mockapi.io/bedroom",
                 imageField: "bad_img",
+            },
+            sofa: {
+                label: "Sofa",
+                url: "https://69de37f1410caa3d47bacf18.mockapi.io/sofa",
+                imageField: "sofa_img",
+            },
+            estimate: {
+                label: "Estimate",
+                url: "https://69e76b9c68208c1debe8d996.mockapi.io/Estimate",
+                mode: "estimate",
+                nameField: "name",
+                planField: "plan",
+                withPriceField: "with_price",
+                withoutPriceField: "without_price",
+            },
+            schedule: {
+                label: "Schedule",
+                url: "https://69e76b9c68208c1debe8d996.mockapi.io/Schedule",
+                mode: "schedule",
+                dateField: "date",
+                timeField: "time",
+                personField: "person_name",
+                phoneField: "phone_no",
+                availabilityField: "available",
+                workField: "work_name",
             },
             mandir: {
                 label: "Mandir",
@@ -970,7 +1669,26 @@
         bodyElement.classList.remove("auth-pending");
         bodyElement.classList.add("auth-ready");
 
-        let activeKey = "tv";
+        const pageParams = new URLSearchParams(window.location.search);
+        const requestedCollection = pageParams.get("collection");
+        const requestedScheduleDate = normalizeDateValue(pageParams.get("scheduleDate"));
+
+        const SCHEDULE_HALF_DAY_SLOT_KEYS = ["before_1_pm", "after_1_pm"];
+        const SCHEDULE_SLOT_LABELS = {
+            before_1_pm: "Before 1 PM",
+            after_1_pm: "After 1 PM",
+            full_day: "Full day",
+        };
+        const DEFAULT_SCHEDULE_TIME_SLOT = SCHEDULE_SLOT_LABELS.before_1_pm;
+
+        let activeKey = requestedCollection && COLLECTIONS[requestedCollection] ? requestedCollection : "tv";
+        let currentRecords = [];
+        let activeEstimatePlanFilter = "all";
+        let activeScheduleSearchQuery = "";
+        let activeScheduleAvailabilityFilter = "all";
+        let activeWeekStart = requestedScheduleDate ? startOfWeek(requestedScheduleDate) : startOfWeek(new Date());
+        let pendingScheduleDate = requestedScheduleDate;
+        let pendingScheduleCount = 0;
 
         const tabsRow = document.getElementById("tabsRow");
         const welcomeName = document.getElementById("welcomeName");
@@ -981,23 +1699,76 @@
         const activeCollection = document.getElementById("activeCollection");
         const crudForm = document.getElementById("crudForm");
         const recordIdInput = document.getElementById("recordId");
+        const recordLabelField = document.getElementById("recordLabelField");
         const recordLabelInput = document.getElementById("recordLabel");
+        const recordImageField = document.getElementById("recordImageField");
         const recordImageInput = document.getElementById("recordImage");
+        const estimateFields = document.getElementById("estimateFields");
+        const estimateNameInput = document.getElementById("estimateName");
+        const estimatePlanInput = document.getElementById("estimatePlan");
+        const estimateWithPriceInput = document.getElementById("estimateWithPrice");
+        const estimateWithoutPriceInput = document.getElementById("estimateWithoutPrice");
+        const scheduleFields = document.getElementById("scheduleFields");
+        const scheduleDateInput = document.getElementById("scheduleDate");
+        const scheduleTimeInput = document.getElementById("scheduleTime");
+        const schedulePersonInput = document.getElementById("schedulePerson");
+        const schedulePhoneInput = document.getElementById("schedulePhone");
+        const scheduleWorkInput = document.getElementById("scheduleWork");
+        const scheduleAvailabilityInput = document.getElementById("scheduleAvailability");
+        const previewCard = document.getElementById("previewCard");
         const previewImage = document.getElementById("previewImage");
         const previewText = document.getElementById("previewText");
         const submitButton = document.getElementById("submitButton");
         const resetButton = document.getElementById("resetButton");
         const refreshButton = document.getElementById("refreshButton");
+        const tableHeadRow = document.getElementById("tableHeadRow");
         const tableBody = document.getElementById("tableBody");
+        const statsRow = document.querySelector(".stats-row");
         const totalRecords = document.getElementById("totalRecords");
         const modeLabel = document.getElementById("modeLabel");
         const apiStatus = document.getElementById("apiStatus");
+        const pendingRequestsCard = document.getElementById("pendingRequestsCard");
+        const pendingRequestsCount = document.getElementById("pendingRequestsCount");
         const statusBox = document.getElementById("statusBox");
+        const estimateFilterPanel = document.getElementById("estimateFilterPanel");
+        const estimateFilterRow = document.getElementById("estimateFilterRow");
+        const scheduleFilterPanel = document.getElementById("scheduleFilterPanel");
+        const scheduleSearchInput = document.getElementById("scheduleSearchInput");
+        const scheduleFilterClearButton = document.getElementById("scheduleFilterClearButton");
+        const scheduleAvailabilityRow = document.getElementById("scheduleAvailabilityRow");
+        const scheduleFilterNote = document.getElementById("scheduleFilterNote");
+        const scheduleWeekPanel = document.getElementById("scheduleWeekPanel");
+        const weekGrid = document.getElementById("weekGrid");
+        const weekRangeLabel = document.getElementById("weekRangeLabel");
+        const prevWeekButton = document.getElementById("prevWeekButton");
+        const currentWeekButton = document.getElementById("currentWeekButton");
+        const nextWeekButton = document.getElementById("nextWeekButton");
+
+        const ESTIMATE_FILTERS = [
+            { value: "all", label: "All" },
+            { value: "Basic", label: "Basic" },
+            { value: "primium", label: "primium" },
+            { value: "Expence", label: "Expence" },
+        ];
+        const SCHEDULE_AVAILABILITY_FILTERS = [
+            { value: "all", label: "All" },
+            { value: "available", label: "Available" },
+            { value: "pending", label: "Pending" },
+            { value: "unavailable", label: "Not Available" },
+        ];
 
         welcomeName.textContent = `Welcome, ${sessionUser.username}`;
 
         function currentCollection() {
             return COLLECTIONS[activeKey];
+        }
+
+        function isEstimateCollection() {
+            return currentCollection().mode === "estimate";
+        }
+
+        function isScheduleCollection() {
+            return currentCollection().mode === "schedule";
         }
 
         function currentImageField() {
@@ -1006,6 +1777,561 @@
 
         function currentApiUrl() {
             return currentCollection().url;
+        }
+
+        function defaultSubmitButtonText() {
+            return isScheduleCollection() ? "Save schedule" : "Create record";
+        }
+
+        function editSubmitButtonText() {
+            return isScheduleCollection() ? "Update schedule" : "Update record";
+        }
+
+        function tableColumnCount() {
+            if (isEstimateCollection()) {
+                return 6;
+            }
+
+            if (isScheduleCollection()) {
+                return 8;
+            }
+
+            return 5;
+        }
+
+        function normalizeValue(value) {
+            return String(value || "").trim().toLowerCase();
+        }
+
+        function escapeHtml(value) {
+            return String(value || "").replace(/[&<>"']/g, (character) => {
+                const replacements = {
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    "\"": "&quot;",
+                    "'": "&#39;",
+                };
+
+                return replacements[character];
+            });
+        }
+
+        function getDialablePhone(value) {
+            const sanitized = String(value || "").trim().replace(/[^\d+]/g, "").replace(/(?!^)\+/g, "");
+
+            if (!sanitized) {
+                return "";
+            }
+
+            return sanitized.startsWith("+")
+                ? `+${sanitized.slice(1).replace(/\+/g, "")}`
+                : sanitized;
+        }
+
+        function getScheduleIconMarkup(type) {
+            if (type === "person") {
+                return `
+                    <svg class="slot-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M12 12a4 4 0 1 0 0-8a4 4 0 0 0 0 8Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M5 20a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                `;
+            }
+
+            if (type === "phone") {
+                return `
+                    <svg class="slot-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M5.5 4.5h3l1.5 4l-2 1.7a14 14 0 0 0 5.8 5.8l1.7-2l4 1.5v3a1.5 1.5 0 0 1-1.7 1.5A17.8 17.8 0 0 1 4 6.2A1.5 1.5 0 0 1 5.5 4.5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                `;
+            }
+
+            return `
+                <svg class="slot-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M6 4h4l2 5l-2.5 2a12 12 0 0 0 5.5 5.5l2-2.5l5 2v4a1 1 0 0 1-1.1 1A18 18 0 0 1 3 5.1A1 1 0 0 1 4 4h2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+            `;
+        }
+
+        function renderScheduleCallLink(personText, phoneText) {
+            const dialablePhone = getDialablePhone(phoneText);
+
+            if (!dialablePhone) {
+                return "";
+            }
+
+            return `
+                <a class="slot-call-link" href="tel:${dialablePhone}" aria-label="Call ${escapeHtml(personText)} at ${escapeHtml(phoneText)}">
+                    ${getScheduleIconMarkup("call")}
+                </a>
+            `;
+        }
+
+        function formatDateValue(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
+        }
+
+        function parseDateValue(value) {
+            if (value instanceof Date) {
+                if (Number.isNaN(value.getTime())) {
+                    return null;
+                }
+
+                const dateCopy = new Date(value);
+                dateCopy.setHours(0, 0, 0, 0);
+                return dateCopy;
+            }
+
+            const rawValue = String(value || "").trim();
+
+            if (!rawValue) {
+                return null;
+            }
+
+            const parsedDate = rawValue.match(/^\d{4}-\d{2}-\d{2}$/)
+                ? new Date(`${rawValue}T00:00:00`)
+                : new Date(rawValue);
+
+            if (Number.isNaN(parsedDate.getTime())) {
+                return null;
+            }
+
+            parsedDate.setHours(0, 0, 0, 0);
+            return parsedDate;
+        }
+
+        function normalizeDateValue(value) {
+            const parsedDate = parseDateValue(value);
+            return parsedDate ? formatDateValue(parsedDate) : "";
+        }
+
+        function startOfWeek(date) {
+            const baseDate = parseDateValue(date) || new Date();
+            const day = baseDate.getDay();
+            const diff = day === 0 ? -6 : 1 - day;
+
+            baseDate.setDate(baseDate.getDate() + diff);
+            return baseDate;
+        }
+
+        function isWeekend(date) {
+            const day = date.getDay();
+            return day === 0 || day === 6;
+        }
+
+        function defaultAvailabilityForDate(dateValue) {
+            const parsedDate = parseDateValue(dateValue);
+            return parsedDate ? isWeekend(parsedDate) : false;
+        }
+
+        function normalizeAvailabilityValue(value) {
+            const normalized = normalizeValue(value).replace(/[_-]+/g, " ");
+
+            if (["available", "yes", "true", "free", "open"].includes(normalized)) {
+                return "available";
+            }
+
+            if (["not available", "notavailable", "unavailable", "busy", "booked", "no", "false", "occupied"].includes(normalized)) {
+                return "unavailable";
+            }
+
+            if (["pending", "pending approval", "awaiting approval", "requested"].includes(normalized)) {
+                return "pending";
+            }
+
+            return "";
+        }
+
+        function normalizeScheduleSlotKey(value) {
+            const normalized = normalizeValue(value).replace(/[_-]+/g, " ");
+
+            if (!normalized) {
+                return "full_day";
+            }
+
+            if (normalized.includes("full day") || normalized.includes("whole day")) {
+                return "full_day";
+            }
+
+            if (normalized.includes("before 1")) {
+                return "before_1_pm";
+            }
+
+            if (normalized.includes("after 1")) {
+                return "after_1_pm";
+            }
+
+            if (normalized.includes("morning")) {
+                return "before_1_pm";
+            }
+
+            if (normalized.includes("afternoon")) {
+                return "after_1_pm";
+            }
+
+            const timeMatch = normalized.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/);
+
+            if (!timeMatch) {
+                return "full_day";
+            }
+
+            let hours = Number(timeMatch[1]);
+            const meridian = timeMatch[3] || "";
+
+            if (meridian === "am") {
+                hours = hours === 12 ? 0 : hours;
+            } else if (meridian === "pm") {
+                hours = hours === 12 ? 12 : hours + 12;
+            }
+
+            return hours < 13 ? "before_1_pm" : "after_1_pm";
+        }
+
+        function getCoveredSlotKeysForRecord(record) {
+            const timeField = currentCollection().timeField || "time";
+            const slotKey = normalizeScheduleSlotKey(record[timeField] || record.time);
+            return slotKey === "full_day" ? [...SCHEDULE_HALF_DAY_SLOT_KEYS] : [slotKey];
+        }
+
+        function getScheduleStatusPriority(status) {
+            if (status === "unavailable") {
+                return 3;
+            }
+
+            if (status === "pending") {
+                return 2;
+            }
+
+            if (status === "available") {
+                return 1;
+            }
+
+            return 0;
+        }
+
+        function mergeScheduleSlotStatus(currentStatus, nextStatus) {
+            if (!currentStatus) {
+                return nextStatus;
+            }
+
+            return getScheduleStatusPriority(nextStatus) >= getScheduleStatusPriority(currentStatus)
+                ? nextStatus
+                : currentStatus;
+        }
+
+        function defaultScheduleAvailabilityValue(dateValue) {
+            return defaultAvailabilityForDate(dateValue) ? "Available" : "Not Available";
+        }
+
+        function formatDateForDisplay(value, options) {
+            const parsedDate = parseDateValue(value);
+            return parsedDate ? new Intl.DateTimeFormat("en-IN", options).format(parsedDate) : (value || "-");
+        }
+
+        function getScheduleDefaultMessage(dateValue) {
+            return defaultAvailabilityForDate(dateValue)
+                ? "Weekend is open by default. You can book a slot for this day."
+                : "Weekday is blocked by default. Use the form only when work is assigned.";
+        }
+
+        function scheduleRecordStatus(record) {
+            const availabilityField = currentCollection().availabilityField || "available";
+            const personField = currentCollection().personField || "person_name";
+            const timeField = currentCollection().timeField || "time";
+            const workField = currentCollection().workField || "work_name";
+            const normalizedAvailability = normalizeAvailabilityValue(record[availabilityField] || record.available);
+
+            if (normalizedAvailability) {
+                return normalizedAvailability;
+            }
+
+            const hasAssignment = Boolean(
+                String(record[personField] || record.person_name || "").trim()
+                || String(record[timeField] || record.time || "").trim()
+                || String(record[workField] || record.work_name || record.work || "").trim()
+            );
+
+            if (hasAssignment) {
+                return "unavailable";
+            }
+
+            return defaultAvailabilityForDate(record[currentCollection().dateField] || record.date) ? "available" : "unavailable";
+        }
+
+        function scheduleRecordIsAvailable(record) {
+            return scheduleRecordStatus(record) === "available";
+        }
+
+        function getScheduleRecordDate(record) {
+            return normalizeDateValue(record[currentCollection().dateField] || record.date);
+        }
+
+        function scheduleRecordsForDate(dateValue) {
+            return currentRecords.filter((record) => getScheduleRecordDate(record) === dateValue);
+        }
+
+        function getDateSlotStatuses(dateValue, records = scheduleRecordsForDate(dateValue)) {
+            const slotStatuses = {
+                before_1_pm: "",
+                after_1_pm: "",
+            };
+            const defaultStatus = defaultAvailabilityForDate(dateValue) ? "available" : "unavailable";
+
+            records.forEach((record) => {
+                const status = scheduleRecordStatus(record);
+
+                getCoveredSlotKeysForRecord(record).forEach((slotKey) => {
+                    slotStatuses[slotKey] = mergeScheduleSlotStatus(slotStatuses[slotKey], status);
+                });
+            });
+
+            SCHEDULE_HALF_DAY_SLOT_KEYS.forEach((slotKey) => {
+                if (!slotStatuses[slotKey]) {
+                    slotStatuses[slotKey] = defaultStatus;
+                }
+            });
+
+            return slotStatuses;
+        }
+
+        function getDayScheduleSummary(dateValue) {
+            const records = scheduleRecordsForDate(dateValue);
+            const slotStatuses = getDateSlotStatuses(dateValue, records);
+            const openSlotKeys = SCHEDULE_HALF_DAY_SLOT_KEYS.filter((slotKey) => slotStatuses[slotKey] === "available");
+            const pendingSlotKeys = SCHEDULE_HALF_DAY_SLOT_KEYS.filter((slotKey) => slotStatuses[slotKey] === "pending");
+
+            return {
+                status: openSlotKeys.length ? "available" : (pendingSlotKeys.length ? "pending" : "unavailable"),
+                records,
+                openSlotKeys,
+                openSlotLabels: openSlotKeys.map((slotKey) => SCHEDULE_SLOT_LABELS[slotKey]),
+                slotStatuses,
+            };
+        }
+
+        function getAvailabilityMeta(status) {
+            if (status === "pending") {
+                return {
+                    label: "Pending",
+                    className: "pending",
+                };
+            }
+
+            if (status === "available") {
+                return {
+                    label: "Available",
+                    className: "available",
+                };
+            }
+
+            return {
+                label: "Not Available",
+                className: "unavailable",
+            };
+        }
+
+        function getBookableSlotOptions(dateValue) {
+            const summary = getDayScheduleSummary(dateValue);
+            const slotOptions = summary.openSlotKeys.map((slotKey) => SCHEDULE_SLOT_LABELS[slotKey]);
+
+            if (summary.openSlotKeys.length === SCHEDULE_HALF_DAY_SLOT_KEYS.length) {
+                slotOptions.push(SCHEDULE_SLOT_LABELS.full_day);
+            }
+
+            return slotOptions;
+        }
+
+        function applyScheduleDateDefaults(forceAvailability = false) {
+            if (!isScheduleCollection()) {
+                return;
+            }
+
+            const selectedDate = scheduleDateInput.value || formatDateValue(new Date());
+
+            if (!scheduleDateInput.value) {
+                scheduleDateInput.value = selectedDate;
+            }
+
+            if (!scheduleTimeInput.value) {
+                scheduleTimeInput.value = DEFAULT_SCHEDULE_TIME_SLOT;
+            }
+
+            if (forceAvailability || !recordIdInput.value) {
+                scheduleAvailabilityInput.value = defaultScheduleAvailabilityValue(selectedDate);
+            }
+        }
+
+        function renderEstimateFilters() {
+            const estimateMode = isEstimateCollection();
+            estimateFilterPanel.classList.toggle("is-hidden", !estimateMode);
+
+            if (!estimateMode) {
+                estimateFilterRow.innerHTML = "";
+                return;
+            }
+
+            estimateFilterRow.innerHTML = ESTIMATE_FILTERS.map((filter) => `
+                <button
+                    class="filter-chip ${filter.value === activeEstimatePlanFilter ? "active" : ""}"
+                    type="button"
+                    data-plan-filter="${filter.value}">
+                    ${filter.label}
+                </button>
+            `).join("");
+        }
+
+        function renderScheduleFilters() {
+            const scheduleMode = isScheduleCollection();
+            scheduleFilterPanel.classList.toggle("is-hidden", !scheduleMode);
+
+            if (!scheduleMode) {
+                scheduleAvailabilityRow.innerHTML = "";
+                return;
+            }
+
+            if (scheduleSearchInput.value !== activeScheduleSearchQuery) {
+                scheduleSearchInput.value = activeScheduleSearchQuery;
+            }
+
+            scheduleAvailabilityRow.innerHTML = SCHEDULE_AVAILABILITY_FILTERS.map((filter) => `
+                <button
+                    class="filter-chip ${filter.value === activeScheduleAvailabilityFilter ? "active" : ""}"
+                    type="button"
+                    data-schedule-availability="${filter.value}">
+                    ${filter.label}
+                </button>
+            `).join("");
+
+            const noteParts = [];
+
+            if (activeScheduleSearchQuery) {
+                noteParts.push(`Search: "${activeScheduleSearchQuery}"`);
+            }
+
+            if (activeScheduleAvailabilityFilter !== "all") {
+                const availabilityLabel = activeScheduleAvailabilityFilter === "available"
+                    ? "Available"
+                    : activeScheduleAvailabilityFilter === "pending"
+                        ? "Pending"
+                        : "Not Available";
+                noteParts.push(`Availability: ${availabilityLabel}`);
+            }
+
+            scheduleFilterNote.textContent = noteParts.length
+                ? noteParts.join(" | ")
+                : "Use search to find a carpenter, phone number, date, time, or work details. Use chips to filter by availability.";
+        }
+
+        function getVisibleRecords(records = currentRecords) {
+            if (isEstimateCollection()) {
+                if (activeEstimatePlanFilter === "all") {
+                    return records;
+                }
+
+                return records.filter((record) => normalizeValue(record[currentCollection().planField]) === normalizeValue(activeEstimatePlanFilter));
+            }
+
+            if (isScheduleCollection()) {
+                const normalizedScheduleSearchQuery = normalizeValue(activeScheduleSearchQuery);
+
+                return records.filter((record) => {
+                    const dateValue = record[currentCollection().dateField] || record.date || "";
+                    const timeValue = record[currentCollection().timeField] || record.time || "";
+                    const personValue = record[currentCollection().personField] || record.person_name || "";
+                    const phoneValue = record[currentCollection().phoneField] || record.phone_no || "";
+                    const workValue = record[currentCollection().workField] || record.work_name || record.work || "";
+                    const availabilityValue = scheduleRecordStatus(record);
+
+                    if (activeScheduleAvailabilityFilter !== "all" && activeScheduleAvailabilityFilter !== availabilityValue) {
+                        return false;
+                    }
+
+                    if (!normalizedScheduleSearchQuery) {
+                        return true;
+                    }
+
+                    const searchText = [
+                        record.id,
+                        normalizeDateValue(dateValue),
+                        formatDateForDisplay(dateValue, { day: "2-digit", month: "short", year: "numeric" }),
+                        timeValue,
+                        personValue,
+                        phoneValue,
+                        workValue,
+                        availabilityValue,
+                        availabilityValue === "unavailable" ? "not available" : "",
+                    ].join(" ").toLowerCase();
+
+                    return searchText.includes(normalizedScheduleSearchQuery);
+                });
+            }
+
+                return records;
+        }
+
+        function syncFormMode() {
+            const estimateMode = isEstimateCollection();
+            const scheduleMode = isScheduleCollection();
+
+            recordLabelField.classList.toggle("is-hidden", estimateMode || scheduleMode);
+            recordImageField.classList.toggle("is-hidden", estimateMode || scheduleMode);
+            previewCard.classList.toggle("is-hidden", estimateMode || scheduleMode);
+            estimateFields.classList.toggle("is-hidden", !estimateMode);
+            scheduleFields.classList.toggle("is-hidden", !scheduleMode);
+            estimateFilterPanel.classList.toggle("is-hidden", !estimateMode);
+            scheduleFilterPanel.classList.toggle("is-hidden", !scheduleMode);
+            scheduleWeekPanel.classList.toggle("is-hidden", !scheduleMode);
+
+            recordImageInput.required = !estimateMode && !scheduleMode;
+            estimateNameInput.required = estimateMode;
+            estimatePlanInput.required = estimateMode;
+            estimateWithPriceInput.required = estimateMode;
+            estimateWithoutPriceInput.required = estimateMode;
+            scheduleDateInput.required = scheduleMode;
+            scheduleTimeInput.required = scheduleMode;
+            schedulePersonInput.required = scheduleMode;
+            schedulePhoneInput.required = scheduleMode;
+            scheduleAvailabilityInput.required = scheduleMode;
+        }
+
+        function syncTableHead() {
+            if (isEstimateCollection()) {
+                tableHeadRow.innerHTML = `
+                    <th>ID</th>
+                    <th>Category</th>
+                    <th>Plan</th>
+                    <th>With material</th>
+                    <th>Without material</th>
+                    <th>Actions</th>
+                `;
+                return;
+            }
+
+            if (isScheduleCollection()) {
+                tableHeadRow.innerHTML = `
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Person</th>
+                    <th>Phone</th>
+                    <th>Work</th>
+                    <th>Availability</th>
+                    <th>Actions</th>
+                `;
+                return;
+            }
+
+            tableHeadRow.innerHTML = `
+                <th>ID</th>
+                <th>Preview</th>
+                <th>Image field</th>
+                <th>Image URL</th>
+                <th>Actions</th>
+            `;
         }
 
         function updatePreview(url) {
@@ -1030,32 +2356,207 @@
             });
         }
 
+        function countPendingScheduleRecords(records) {
+            return Array.isArray(records)
+                ? records.filter((record) => normalizeAvailabilityValue(record.available) === "pending").length
+                : 0;
+        }
+
+        function updatePendingRequestUI() {
+            pendingRequestsCount.textContent = String(pendingScheduleCount);
+            pendingRequestsCard.classList.toggle("is-hidden", !isScheduleCollection());
+            statsRow.classList.toggle("schedule-mode", isScheduleCollection());
+        }
+
         function renderTabs() {
             tabsRow.innerHTML = Object.entries(COLLECTIONS).map(([key, config]) => `
                 <button class="tab-button ${key === activeKey ? "active" : ""}" type="button" data-key="${key}">
                     ${config.label}
+                    ${key === "schedule" && pendingScheduleCount ? `<span class="tab-badge">${pendingScheduleCount > 99 ? "99+" : pendingScheduleCount}</span>` : ""}
                 </button>
             `).join("");
         }
 
+        function renderScheduleBoard() {
+            if (!isScheduleCollection()) {
+                weekGrid.innerHTML = "";
+                weekRangeLabel.textContent = "Week range";
+                return;
+            }
+
+            const weekStart = new Date(activeWeekStart);
+            const weekEnd = new Date(activeWeekStart);
+            weekEnd.setDate(weekEnd.getDate() + 6);
+
+            weekRangeLabel.textContent = `${formatDateForDisplay(weekStart, { day: "2-digit", month: "short" })} - ${formatDateForDisplay(weekEnd, { day: "2-digit", month: "short", year: "numeric" })}`;
+
+            weekGrid.innerHTML = Array.from({ length: 7 }, (_, index) => {
+                const date = new Date(weekStart);
+                date.setDate(weekStart.getDate() + index);
+
+                const dateValue = formatDateValue(date);
+                const summary = getDayScheduleSummary(dateValue);
+                const availabilityMeta = getAvailabilityMeta(summary.status);
+                const openSlotNote = summary.records.length && summary.openSlotLabels.length
+                    ? `<p class="day-card-copy">Open slot: ${escapeHtml(summary.openSlotLabels.join(" / "))}</p>`
+                    : "";
+                const slotsMarkup = summary.records.length
+                    ? `
+                        <div class="day-slots">
+                            ${summary.records.slice(0, 2).map((record) => {
+                                const timeText = record[currentCollection().timeField] || record.time || "Time not set";
+                                const personText = record[currentCollection().personField] || record.person_name || "Person not set";
+                                const phoneText = record[currentCollection().phoneField] || record.phone_no || "Contact not set";
+                                const workText = record[currentCollection().workField] || record.work_name || record.work || "";
+                                const status = scheduleRecordStatus(record);
+                                const noteText = workText || (status === "pending"
+                                    ? "Booking request sent. Waiting for approval."
+                                    : (status === "available" ? "Marked available for booking." : "Booked or unavailable for this slot."));
+
+                                return `
+                                    <div class="day-slot">
+                                        <strong>${escapeHtml(timeText)}</strong>
+                                        <div class="slot-meta-list">
+                                            <div class="slot-meta">
+                                                <span class="slot-meta-text">
+                                                    ${getScheduleIconMarkup("person")}
+                                                    <span>${escapeHtml(personText)}</span>
+                                                </span>
+                                            </div>
+                                            <div class="slot-meta">
+                                                <span class="slot-meta-text">
+                                                    ${getScheduleIconMarkup("phone")}
+                                                    <span>${escapeHtml(phoneText)}</span>
+                                                </span>
+                                                ${renderScheduleCallLink(personText, phoneText)}
+                                            </div>
+                                        </div>
+                                        <span class="slot-note">${escapeHtml(noteText)}</span>
+                                    </div>
+                                `;
+                            }).join("")}
+                            ${summary.records.length > 2 ? `<p class="day-card-copy">+${summary.records.length - 2} more slot entries in the table below.</p>` : ""}
+                        </div>
+                    `
+                    : `<p class="day-card-copy">${getScheduleDefaultMessage(dateValue)}</p>`;
+
+                return `
+                    <article class="day-card ${availabilityMeta.className}">
+                        <div class="day-card-head">
+                            <div class="day-card-title">
+                                <strong>${formatDateForDisplay(dateValue, { weekday: "long" })}</strong>
+                                <span>${formatDateForDisplay(dateValue, { day: "2-digit", month: "long", year: "numeric" })}</span>
+                            </div>
+                            <span class="status-pill ${availabilityMeta.className}">${availabilityMeta.label}</span>
+                        </div>
+
+                        ${slotsMarkup}
+                        ${openSlotNote}
+
+                        ${summary.status === "available" ? `
+                            <button class="action-button book-slot-button" type="button" data-action="book-slot" data-date="${dateValue}">
+                                Book slot
+                            </button>
+                        ` : ""}
+                    </article>
+                `;
+            }).join("");
+        }
+
+        async function refreshPendingScheduleCount(records) {
+            if (Array.isArray(records)) {
+                pendingScheduleCount = countPendingScheduleRecords(records);
+                renderTabs();
+                updatePendingRequestUI();
+                return;
+            }
+
+            try {
+                const response = await fetch(COLLECTIONS.schedule.url);
+
+                if (!response.ok) {
+                    throw new Error("Unable to load pending schedule count.");
+                }
+
+                const scheduleRecords = await response.json();
+                pendingScheduleCount = countPendingScheduleRecords(scheduleRecords);
+                renderTabs();
+                updatePendingRequestUI();
+            } catch (error) {
+                renderTabs();
+                updatePendingRequestUI();
+            }
+        }
+
         function syncHeadings() {
             const config = currentCollection();
-            formTitle.textContent = `Create ${config.label} record`;
-            formCopy.textContent = `This form writes to ${config.imageField} on the ${config.label.toLowerCase()} API.`;
-            tableTitle.textContent = `${config.label} records`;
+            formTitle.textContent = isScheduleCollection() ? "Create schedule entry" : `Create ${config.label} record`;
+            tableTitle.textContent = isScheduleCollection() ? "Schedule planner" : `${config.label} records`;
             activeCollection.textContent = config.label;
+
+            if (isEstimateCollection()) {
+                formCopy.textContent = "This form manages estimate rates using name, plan, with_price, and without_price fields.";
+            } else if (isScheduleCollection()) {
+                formCopy.textContent = "Use the calendar date, time, carpenter, phone number, and availability fields to manage weekly work slots.";
+            } else {
+                formCopy.textContent = `This form writes to ${config.imageField} on the ${config.label.toLowerCase()} API.`;
+            }
+
+            syncFormMode();
+            syncTableHead();
+            renderEstimateFilters();
+            renderScheduleFilters();
+            renderScheduleBoard();
+            updatePendingRequestUI();
         }
 
         function resetForm() {
             recordIdInput.value = "";
             recordLabelInput.value = "";
             recordImageInput.value = "";
-            submitButton.textContent = "Create record";
+            estimateNameInput.value = "";
+            estimatePlanInput.value = "";
+            estimateWithPriceInput.value = "";
+            estimateWithoutPriceInput.value = "";
+            scheduleDateInput.value = "";
+            scheduleTimeInput.value = "";
+            schedulePersonInput.value = "";
+            schedulePhoneInput.value = "";
+            scheduleWorkInput.value = "";
+            scheduleAvailabilityInput.value = "Available";
+            submitButton.textContent = defaultSubmitButtonText();
             modeLabel.textContent = "Create";
             updatePreview("");
+            applyScheduleDateDefaults(true);
         }
 
         function buildPayload() {
+            if (isEstimateCollection()) {
+                return {
+                    [currentCollection().nameField]: estimateNameInput.value.trim(),
+                    [currentCollection().planField]: estimatePlanInput.value.trim(),
+                    [currentCollection().withPriceField]: estimateWithPriceInput.value.trim(),
+                    [currentCollection().withoutPriceField]: estimateWithoutPriceInput.value.trim(),
+                };
+            }
+
+            if (isScheduleCollection()) {
+                const payload = {
+                    [currentCollection().dateField]: scheduleDateInput.value,
+                    [currentCollection().timeField]: scheduleTimeInput.value,
+                    [currentCollection().personField]: schedulePersonInput.value.trim(),
+                    [currentCollection().phoneField]: schedulePhoneInput.value.trim(),
+                    [currentCollection().availabilityField]: scheduleAvailabilityInput.value,
+                };
+
+                const workValue = scheduleWorkInput.value.trim();
+                if (workValue) {
+                    payload[currentCollection().workField] = workValue;
+                }
+
+                return payload;
+            }
+
             const imageUrl = recordImageInput.value.trim();
             const payload = {
                 [currentImageField()]: imageUrl,
@@ -1073,7 +2574,130 @@
             totalRecords.textContent = records.length;
 
             if (!records.length) {
-                tableBody.innerHTML = '<tr><td class="empty-state" colspan="5">No records found for this collection.</td></tr>';
+                const emptyMessage = isEstimateCollection() && activeEstimatePlanFilter !== "all"
+                    ? `No estimate records found for the ${activeEstimatePlanFilter} plan.`
+                    : isScheduleCollection()
+                        ? ((activeScheduleSearchQuery || activeScheduleAvailabilityFilter !== "all")
+                            ? "No schedule entries match the current search filter."
+                            : "No schedule entries found yet.")
+                        : "No records found for this collection.";
+                tableBody.innerHTML = `<tr><td class="empty-state" colspan="${tableColumnCount()}">${emptyMessage}</td></tr>`;
+                return;
+            }
+
+            if (isEstimateCollection()) {
+                tableBody.innerHTML = records.map((record) => {
+                    const name = record[currentCollection().nameField] || "-";
+                    const plan = record[currentCollection().planField] || "-";
+                    const withPrice = record[currentCollection().withPriceField] || "-";
+                    const withoutPrice = record[currentCollection().withoutPriceField] || "-";
+
+                    return `
+                        <tr>
+                            <td data-label="ID">${record.id}</td>
+                            <td data-label="Category">${name}</td>
+                            <td data-label="Plan">${plan}</td>
+                            <td data-label="With material">${withPrice}</td>
+                            <td data-label="Without material">${withoutPrice}</td>
+                            <td data-label="Actions">
+                                <div class="row-actions">
+                                    <button
+                                        class="action-button edit-button"
+                                        type="button"
+                                        data-action="edit"
+                                        data-id="${record.id}"
+                                        data-name="${name}"
+                                        data-plan="${plan}"
+                                        data-with-price="${withPrice}"
+                                        data-without-price="${withoutPrice}">
+                                        Edit
+                                    </button>
+                                    <button
+                                        class="action-button delete-button"
+                                        type="button"
+                                        data-action="delete"
+                                        data-id="${record.id}">
+                                        Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join("");
+                return;
+            }
+
+            if (isScheduleCollection()) {
+                tableBody.innerHTML = records.map((record) => {
+                    const dateField = currentCollection().dateField;
+                    const timeField = currentCollection().timeField;
+                    const personField = currentCollection().personField;
+                    const phoneField = currentCollection().phoneField;
+                    const availabilityField = currentCollection().availabilityField;
+                    const workField = currentCollection().workField;
+                    const dateValue = record[dateField] || "-";
+                    const timeValue = record[timeField] || "-";
+                    const personValue = record[personField] || "-";
+                    const phoneValue = record[phoneField] || "-";
+                    const workValue = record[workField] || record.work_name || record.work || "-";
+                    const status = scheduleRecordStatus(record);
+                    const availabilityMeta = getAvailabilityMeta(status);
+                    const actionButtons = status === "pending"
+                        ? `
+                                    <button
+                                        class="action-button edit-button"
+                                        type="button"
+                                        data-action="accept-request"
+                                        data-id="${record.id}">
+                                        Accept
+                                    </button>
+                                    <button
+                                        class="action-button delete-button"
+                                        type="button"
+                                        data-action="reject-request"
+                                        data-id="${record.id}">
+                                        Reject
+                                    </button>
+                        `
+                        : "";
+
+                    return `
+                        <tr>
+                            <td data-label="ID">${record.id}</td>
+                            <td data-label="Date">${formatDateForDisplay(dateValue, { day: "2-digit", month: "short", year: "numeric" })}</td>
+                            <td data-label="Time">${timeValue}</td>
+                            <td data-label="Person">${personValue}</td>
+                            <td data-label="Phone">${phoneValue}</td>
+                            <td data-label="Work">${workValue}</td>
+                            <td data-label="Availability"><span class="status-pill ${availabilityMeta.className}">${availabilityMeta.label}</span></td>
+                            <td data-label="Actions">
+                                <div class="row-actions">
+                                    ${actionButtons}
+                                    <button
+                                        class="action-button edit-button"
+                                        type="button"
+                                        data-action="edit"
+                                        data-id="${record.id}"
+                                        data-date="${normalizeDateValue(dateValue)}"
+                                        data-time="${timeValue}"
+                                        data-person="${personValue}"
+                                        data-phone="${phoneValue}"
+                                        data-work="${workValue === "-" ? "" : workValue}"
+                                        data-available="${availabilityMeta.label}">
+                                        Edit
+                                    </button>
+                                    <button
+                                        class="action-button delete-button"
+                                        type="button"
+                                        data-action="delete"
+                                        data-id="${record.id}">
+                                        Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join("");
                 return;
             }
 
@@ -1115,7 +2739,7 @@
 
         async function loadRecords() {
             apiStatus.textContent = "Loading";
-            tableBody.innerHTML = '<tr><td class="empty-state" colspan="5">Loading records...</td></tr>';
+            tableBody.innerHTML = `<tr><td class="empty-state" colspan="${tableColumnCount()}">Loading records...</td></tr>`;
 
             try {
                 const response = await fetch(currentApiUrl());
@@ -1124,11 +2748,35 @@
                     throw new Error("Unable to load records.");
                 }
 
-                const records = await response.json();
-                renderRows(records);
+                currentRecords = await response.json();
+                renderRows(getVisibleRecords(currentRecords));
+                renderScheduleBoard();
+
+                if (isScheduleCollection()) {
+                    await refreshPendingScheduleCount(currentRecords);
+                } else {
+                    void refreshPendingScheduleCount();
+                }
+
+                if (isScheduleCollection() && pendingScheduleDate) {
+                    const targetDate = pendingScheduleDate;
+                    pendingScheduleDate = "";
+                    prepareScheduleBooking(targetDate);
+                    renderScheduleBoard();
+                }
+
                 apiStatus.textContent = "Online";
             } catch (error) {
-                tableBody.innerHTML = `<tr><td class="empty-state" colspan="5">${error.message}</td></tr>`;
+                currentRecords = [];
+                tableBody.innerHTML = `<tr><td class="empty-state" colspan="${tableColumnCount()}">${error.message}</td></tr>`;
+                renderScheduleBoard();
+
+                if (isScheduleCollection()) {
+                    await refreshPendingScheduleCount(currentRecords);
+                } else {
+                    void refreshPendingScheduleCount();
+                }
+
                 apiStatus.textContent = "Error";
                 showStatus(error.message, "error");
             }
@@ -1137,7 +2785,35 @@
         async function saveRecord(event) {
             event.preventDefault();
 
-            if (!recordImageInput.value.trim()) {
+            if (isEstimateCollection()) {
+                const name = estimateNameInput.value.trim();
+                const plan = estimatePlanInput.value.trim();
+                const withPrice = estimateWithPriceInput.value.trim();
+                const withoutPrice = estimateWithoutPriceInput.value.trim();
+
+                if (!name || !plan || withPrice === "" || withoutPrice === "") {
+                    showStatus("Category name, plan, and both price fields are required.", "error");
+                    await showAlert("warning", "Missing details", "Please enter category, plan, with material price, and without material price.");
+                    return;
+                }
+
+                if (!Number.isFinite(Number(withPrice)) || !Number.isFinite(Number(withoutPrice))) {
+                    showStatus("Estimate prices must be valid numbers.", "error");
+                    await showAlert("warning", "Invalid prices", "Please enter valid numeric prices for both estimate fields.");
+                    return;
+                }
+            } else if (isScheduleCollection()) {
+                const scheduleDate = scheduleDateInput.value;
+                const scheduleTime = scheduleTimeInput.value;
+                const personName = schedulePersonInput.value.trim();
+                const phoneNumber = schedulePhoneInput.value.trim();
+
+                if (!scheduleDate || !scheduleTime || !personName || !phoneNumber) {
+                    showStatus("Date, time slot, person name, and phone number are required for a schedule entry.", "error");
+                    await showAlert("warning", "Missing details", "Please enter date, time slot, person name, and phone number.");
+                    return;
+                }
+            } else if (!recordImageInput.value.trim()) {
                 showStatus("Image URL is required.", "error");
                 await showAlert("warning", "Missing details", "Please enter an image URL.");
                 return;
@@ -1149,7 +2825,7 @@
             const method = isEdit ? "PUT" : "POST";
 
             submitButton.disabled = true;
-            submitButton.textContent = isEdit ? "Updating..." : "Creating...";
+            submitButton.textContent = isEdit ? "Updating..." : (isScheduleCollection() ? "Saving..." : "Creating...");
             apiStatus.textContent = "Saving";
 
             try {
@@ -1165,8 +2841,12 @@
                     throw new Error("Unable to save record.");
                 }
 
-                showStatus(isEdit ? "Record updated successfully." : "Record created successfully.", "success");
-                await showAlert("success", "Saved", isEdit ? "Record updated successfully." : "Record created successfully.");
+                const successText = isScheduleCollection()
+                    ? (isEdit ? "Schedule updated successfully." : "Schedule saved successfully.")
+                    : (isEdit ? "Record updated successfully." : "Record created successfully.");
+
+                showStatus(successText, "success");
+                await showAlert("success", "Saved", successText);
                 resetForm();
                 await loadRecords();
             } catch (error) {
@@ -1175,7 +2855,7 @@
                 await showAlert("error", "Save failed", error.message);
             } finally {
                 submitButton.disabled = false;
-                submitButton.textContent = recordIdInput.value ? "Update record" : "Create record";
+                submitButton.textContent = recordIdInput.value ? editSubmitButtonText() : defaultSubmitButtonText();
             }
         }
 
@@ -1217,8 +2897,121 @@
             }
         }
 
+        async function acceptScheduleRequest(id) {
+            const record = currentRecords.find((item) => String(item.id) === String(id));
+
+            if (!record) {
+                showStatus("Pending request not found.", "error");
+                return;
+            }
+
+            const result = await window.Swal.fire({
+                icon: "question",
+                title: "Accept booking request?",
+                text: "This will mark the slot as not available on the public calendar.",
+                showCancelButton: true,
+                confirmButtonColor: "#245742",
+                cancelButtonColor: "#433726",
+                confirmButtonText: "Accept",
+            });
+
+            if (!result.isConfirmed) {
+                return;
+            }
+
+            const workField = currentCollection().workField || "work_name";
+            const currentWork = String(record[workField] || record.work_name || record.work || "").trim();
+            const payload = {
+                [currentCollection().availabilityField || "available"]: "Not Available",
+                [workField]: currentWork && normalizeValue(currentWork) !== "pending approval" ? currentWork : "Booked slot",
+            };
+
+            try {
+                const response = await fetch(`${currentApiUrl()}/${id}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        ...record,
+                        ...payload,
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error("Unable to accept booking request.");
+                }
+
+                showStatus("Booking request accepted.", "success");
+                await showAlert("success", "Accepted", "The schedule request is now confirmed.");
+                await loadRecords();
+            } catch (error) {
+                showStatus(error.message, "error");
+                await showAlert("error", "Accept failed", error.message);
+            }
+        }
+
+        async function rejectScheduleRequest(id) {
+            const result = await window.Swal.fire({
+                icon: "warning",
+                title: "Reject booking request?",
+                text: "This will remove the request and reopen the date if no other blocked slot exists.",
+                showCancelButton: true,
+                confirmButtonColor: "#b0442f",
+                cancelButtonColor: "#433726",
+                confirmButtonText: "Reject",
+            });
+
+            if (!result.isConfirmed) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${currentApiUrl()}/${id}`, {
+                    method: "DELETE",
+                });
+
+                if (!response.ok) {
+                    throw new Error("Unable to reject booking request.");
+                }
+
+                if (recordIdInput.value === id) {
+                    resetForm();
+                }
+
+                showStatus("Booking request rejected.", "success");
+                await showAlert("success", "Rejected", "The booking request was removed.");
+                await loadRecords();
+            } catch (error) {
+                showStatus(error.message, "error");
+                await showAlert("error", "Reject failed", error.message);
+            }
+        }
+
+        function prepareScheduleBooking(dateValue) {
+            resetForm();
+            const bookableSlotOptions = getBookableSlotOptions(dateValue);
+            scheduleDateInput.value = dateValue;
+            scheduleTimeInput.value = bookableSlotOptions[0] || DEFAULT_SCHEDULE_TIME_SLOT;
+            scheduleAvailabilityInput.value = "Not Available";
+            schedulePersonInput.focus();
+            const openSlotText = bookableSlotOptions.length ? ` Open slot: ${bookableSlotOptions.join(" / ")}.` : "";
+            showStatus(`Booking slot prepared for ${formatDateForDisplay(dateValue, { day: "2-digit", month: "long", year: "numeric" })}. Fill the carpenter details and save it.${openSlotText}`, "success");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
         function switchCollection(key) {
             activeKey = key;
+
+            if (key !== "estimate") {
+                activeEstimatePlanFilter = "all";
+            }
+
+            if (key !== "schedule") {
+                activeScheduleSearchQuery = "";
+                activeScheduleAvailabilityFilter = "all";
+            }
+
             renderTabs();
             syncHeadings();
             resetForm();
@@ -1227,6 +3020,7 @@
 
         tabsRow.addEventListener("click", (event) => {
             const button = event.target.closest("button[data-key]");
+
             if (!button) {
                 return;
             }
@@ -1246,27 +3040,129 @@
 
             if (action === "edit") {
                 recordIdInput.value = id;
-                recordLabelInput.value = button.dataset.label || "";
-                recordImageInput.value = button.dataset.image || "";
-                submitButton.textContent = "Update record";
+                submitButton.textContent = editSubmitButtonText();
                 modeLabel.textContent = "Edit";
-                updatePreview(recordImageInput.value);
                 showStatus(`Editing ${currentCollection().label} record #${id}.`, "success");
-                recordImageInput.focus();
+
+                if (isEstimateCollection()) {
+                    estimateNameInput.value = button.dataset.name || "";
+                    estimatePlanInput.value = button.dataset.plan || "";
+                    estimateWithPriceInput.value = button.dataset.withPrice || "";
+                    estimateWithoutPriceInput.value = button.dataset.withoutPrice || "";
+                    estimateNameInput.focus();
+                } else if (isScheduleCollection()) {
+                    scheduleDateInput.value = button.dataset.date || "";
+                    scheduleTimeInput.value = button.dataset.time || "";
+                    schedulePersonInput.value = button.dataset.person || "";
+                    schedulePhoneInput.value = button.dataset.phone || "";
+                    scheduleWorkInput.value = button.dataset.work || "";
+                    scheduleAvailabilityInput.value = button.dataset.available || defaultScheduleAvailabilityValue(button.dataset.date || "");
+                    schedulePersonInput.focus();
+                } else {
+                    recordLabelInput.value = button.dataset.label || "";
+                    recordImageInput.value = button.dataset.image || "";
+                    updatePreview(recordImageInput.value);
+                    recordImageInput.focus();
+                }
             }
 
             if (action === "delete") {
                 deleteRecord(id);
             }
+
+            if (action === "accept-request" && isScheduleCollection()) {
+                acceptScheduleRequest(id);
+            }
+
+            if (action === "reject-request" && isScheduleCollection()) {
+                rejectScheduleRequest(id);
+            }
+        });
+
+        estimateFilterRow.addEventListener("click", (event) => {
+            const button = event.target.closest("button[data-plan-filter]");
+
+            if (!button || !isEstimateCollection()) {
+                return;
+            }
+
+            activeEstimatePlanFilter = button.dataset.planFilter || "all";
+            renderEstimateFilters();
+            renderRows(getVisibleRecords(currentRecords));
+        });
+
+        scheduleSearchInput.addEventListener("input", () => {
+            if (!isScheduleCollection()) {
+                return;
+            }
+
+            activeScheduleSearchQuery = scheduleSearchInput.value.trim();
+            renderScheduleFilters();
+            renderRows(getVisibleRecords(currentRecords));
+        });
+
+        scheduleAvailabilityRow.addEventListener("click", (event) => {
+            const button = event.target.closest("button[data-schedule-availability]");
+
+            if (!button || !isScheduleCollection()) {
+                return;
+            }
+
+            activeScheduleAvailabilityFilter = button.dataset.scheduleAvailability || "all";
+            renderScheduleFilters();
+            renderRows(getVisibleRecords(currentRecords));
+        });
+
+        scheduleFilterClearButton.addEventListener("click", () => {
+            activeScheduleSearchQuery = "";
+            activeScheduleAvailabilityFilter = "all";
+            scheduleSearchInput.value = "";
+            renderScheduleFilters();
+            renderRows(getVisibleRecords(currentRecords));
+        });
+
+        weekGrid.addEventListener("click", (event) => {
+            const button = event.target.closest("button[data-action='book-slot']");
+
+            if (!button || !isScheduleCollection()) {
+                return;
+            }
+
+            prepareScheduleBooking(button.dataset.date || "");
+        });
+
+        prevWeekButton.addEventListener("click", () => {
+            const nextStart = new Date(activeWeekStart);
+            nextStart.setDate(nextStart.getDate() - 7);
+            activeWeekStart = nextStart;
+            renderScheduleBoard();
+        });
+
+        currentWeekButton.addEventListener("click", () => {
+            activeWeekStart = startOfWeek(new Date());
+            renderScheduleBoard();
+        });
+
+        nextWeekButton.addEventListener("click", () => {
+            const nextStart = new Date(activeWeekStart);
+            nextStart.setDate(nextStart.getDate() + 7);
+            activeWeekStart = nextStart;
+            renderScheduleBoard();
         });
 
         recordImageInput.addEventListener("input", () => {
             updatePreview(recordImageInput.value);
         });
 
+        scheduleDateInput.addEventListener("change", () => {
+            if (!recordIdInput.value) {
+                scheduleAvailabilityInput.value = defaultScheduleAvailabilityValue(scheduleDateInput.value);
+            }
+        });
+
         resetButton.addEventListener("click", () => {
             resetForm();
-            showStatus("Form cleared. Ready to create a new record.", "success");
+            showStatus(`Form cleared. Ready to create a new ${currentCollection().label.toLowerCase()} entry.`, "success");
         });
 
         refreshButton.addEventListener("click", () => {

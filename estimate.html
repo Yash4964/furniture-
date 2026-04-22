@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FurniSpace Estimate</title>
+<link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+<style>
+:root {
+    --bg: #f4f6f9;
+    --surface: #ffffff;
+    --surface-soft: #f8fafc;
+    --line: #dbe1ea;
+    --text: #0f172a;
+    --muted: #64748b;
+    --accent: #2563eb;
+    --accent-soft: rgba(37, 99, 235, 0.08);
+    --shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 18%),
+        linear-gradient(180deg, #f7f8fb 0%, #eef3f8 100%);
+    color: #1f2937;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 16px 30px;
+    background: #ffffff;
+    box-shadow: 0 6px 24px rgba(15, 23, 42, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-badge {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #0f172a, #2563eb);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+}
+
+.brand-text h2 {
+    margin: 0;
+    font-size: 22px;
+    line-height: 1.1;
+}
+
+.brand-text p {
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.nav-links a,
+.nav-links button {
+    margin: 0;
+    cursor: pointer;
+    text-decoration: none;
+    color: #334155;
+    font-weight: 600;
+    border: 0;
+    background: #eef2ff;
+    padding: 10px 16px;
+    border-radius: 999px;
+    transition: 0.2s ease;
+}
+
+.nav-links a:hover,
+.nav-links button:hover,
+.nav-links .active {
+    background: #dbeafe;
+    color: #0f172a;
+}
+
+.menu-toggle {
+    display: none;
+}
+
+.page-shell {
+    width: min(1480px, calc(100% - 28px));
+    margin: 24px auto 28px;
+}
+
+.site-footer {
+    margin-top: 20px;
+    padding: 24px;
+    border-radius: 28px;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(30, 64, 175, 0.94));
+    color: #e5eefb;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.14);
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) repeat(3, minmax(170px, 0.72fr));
+    gap: 22px;
+}
+
+.footer-brand {
+    display: grid;
+    gap: 10px;
+}
+
+.footer-kicker {
+    display: inline-flex;
+    width: fit-content;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.footer-brand h3,
+.footer-links h4 {
+    margin: 0;
+}
+
+.footer-brand h3 {
+    font-size: 24px;
+    line-height: 1.15;
+}
+
+.footer-brand p,
+.footer-bottom p {
+    margin: 0;
+    color: rgba(226, 232, 240, 0.82);
+    line-height: 1.7;
+}
+
+.footer-links {
+    display: grid;
+    align-content: start;
+    gap: 10px;
+}
+
+.footer-contact-list {
+    display: grid;
+    gap: 12px;
+}
+
+.footer-contact-card {
+    display: grid;
+    gap: 6px;
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(191, 219, 254, 0.16);
+}
+
+.footer-contact-card strong {
+    font-size: 15px;
+    color: #f8fafc;
+}
+
+.footer-contact-card a {
+    color: #bfdbfe;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.footer-contact-card a:hover {
+    color: #ffffff;
+}
+
+.footer-links h4 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #bfdbfe;
+}
+
+.footer-links a,
+.footer-bottom a {
+    color: #f8fafc;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.footer-links a:hover,
+.footer-bottom a:hover {
+    color: #bfdbfe;
+}
+
+.footer-badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.footer-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #e2e8f0;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.footer-bottom {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(191, 219, 254, 0.16);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.estimate-section {
+    padding: 26px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(249, 251, 255, 0.98));
+    border-radius: 28px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(219, 225, 234, 0.7);
+}
+
+.estimate-head {
+    display: block;
+}
+
+.estimate-head h3 {
+    margin: 0;
+    font-size: 2.3rem;
+    line-height: 1.05;
+    color: var(--text);
+}
+
+.estimate-head p {
+    margin: 8px 0 0;
+    color: var(--muted);
+    line-height: 1.6;
+    font-size: 15px;
+}
+
+.estimate-form {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 24px;
+}
+
+.estimate-field {
+    display: grid;
+    gap: 6px;
+}
+
+.estimate-field span {
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+}
+
+.estimate-field input,
+.estimate-field select {
+    height: 46px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 0 14px;
+    font: inherit;
+    color: var(--text);
+    background: #fff;
+    outline: none;
+}
+
+.estimate-field input:focus,
+.estimate-field select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.plan-section {
+    margin-top: 20px;
+}
+
+.plan-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.plan-title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.plan-copy {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+.plan-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.plan-card {
+    display: block;
+    cursor: pointer;
+}
+
+.plan-card input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.plan-card-inner {
+    display: grid;
+    gap: 10px;
+    min-height: 100%;
+    padding: 16px;
+    border-radius: 18px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.plan-card:hover .plan-card-inner {
+    transform: translateY(-2px);
+    border-color: rgba(37, 99, 235, 0.26);
+}
+
+.plan-card input:checked + .plan-card-inner {
+    border-color: rgba(37, 99, 235, 0.6);
+    background: linear-gradient(180deg, rgba(37, 99, 235, 0.08), rgba(255, 255, 255, 1));
+    box-shadow: 0 16px 28px rgba(37, 99, 235, 0.12);
+}
+
+.plan-topline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.plan-name {
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.plan-badge {
+    min-width: 18px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid #c7d2e2;
+    background: #fff;
+    box-shadow: inset 0 0 0 4px transparent;
+    transition: 0.2s ease;
+}
+
+.plan-card input:checked + .plan-card-inner .plan-badge {
+    border-color: var(--accent);
+    box-shadow: inset 0 0 0 4px var(--accent);
+}
+
+.plan-points {
+    margin: 0;
+    padding-left: 16px;
+    color: var(--muted);
+    font-size: 12.5px;
+    line-height: 1.55;
+}
+
+.plan-points li + li {
+    margin-top: 4px;
+}
+
+.estimate-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.estimate-button,
+.estimate-reset {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    cursor: pointer;
+    min-height: 50px;
+    padding: 0 24px;
+    border-radius: 16px;
+    font: inherit;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.estimate-button {
+    min-width: 240px;
+    color: #fff;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    box-shadow: 0 16px 30px rgba(37, 99, 235, 0.22);
+}
+
+.estimate-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 20px 34px rgba(37, 99, 235, 0.28);
+}
+
+.estimate-reset {
+    min-width: 150px;
+    color: var(--text);
+    background: #fff;
+    border-color: var(--line);
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.06);
+}
+
+.estimate-reset:hover {
+    transform: translateY(-1px);
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+.estimate-message {
+    min-height: 22px;
+    margin: 16px 0 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.estimate-message.error {
+    color: #b91c1c;
+}
+
+.estimate-message.success {
+    color: #047857;
+}
+
+.estimate-results {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.estimate-card {
+    padding: 20px;
+    border-radius: 20px;
+    background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+    border: 1px solid #dbe1ea;
+}
+
+.estimate-card span {
+    display: block;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.estimate-card strong {
+    display: block;
+    margin-top: 8px;
+    font-size: 2rem;
+    line-height: 1.1;
+    color: #0f172a;
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 14px 16px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        position: relative;
+    }
+
+    .brand {
+        width: 100%;
+        padding-right: 60px;
+    }
+
+    .brand-text h2 {
+        font-size: 18px;
+    }
+
+    .brand-text p {
+        font-size: 11px;
+    }
+
+    .menu-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        border-radius: 10px;
+        background: #0f172a;
+        color: #fff;
+        font-size: 16px;
+        padding: 0;
+    }
+
+    .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        padding-top: 10px;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links a {
+        width: 100%;
+        text-align: center;
+        padding: 12px 16px;
+    }
+
+    .page-shell {
+        width: calc(100% - 16px);
+        margin: 16px auto 24px;
+    }
+
+    .estimate-section {
+        padding: 16px;
+        border-radius: 20px;
+    }
+
+    .estimate-head,
+    .estimate-form,
+    .plan-grid,
+    .estimate-results {
+        grid-template-columns: 1fr;
+    }
+
+    .estimate-head h3 {
+        font-size: 1.9rem;
+    }
+
+    .estimate-head p {
+        font-size: 13px;
+        line-height: 1.55;
+    }
+
+    .estimate-form {
+        gap: 12px;
+        margin-top: 18px;
+    }
+
+    .estimate-field span,
+    .plan-copy {
+        font-size: 12px;
+    }
+
+    .estimate-field input,
+    .estimate-field select {
+        height: 44px;
+        border-radius: 12px;
+        padding: 0 12px;
+        font-size: 15px;
+    }
+
+    .plan-section {
+        margin-top: 16px;
+    }
+
+    .plan-head {
+        margin-bottom: 10px;
+    }
+
+    .plan-title {
+        font-size: 14px;
+    }
+
+    .plan-grid {
+        gap: 10px;
+    }
+
+    .plan-card-inner {
+        padding: 14px;
+        border-radius: 16px;
+        gap: 8px;
+    }
+
+    .plan-name {
+        font-size: 0.98rem;
+    }
+
+    .plan-points {
+        padding-left: 15px;
+        font-size: 12px;
+        line-height: 1.45;
+    }
+
+    .estimate-actions {
+        margin-top: 16px;
+        gap: 8px;
+    }
+
+    .estimate-button,
+    .estimate-reset {
+        width: auto;
+        min-height: 44px;
+        padding: 0 18px;
+    }
+
+    .estimate-message {
+        margin-top: 14px;
+        font-size: 13px;
+    }
+
+    .estimate-results {
+        gap: 10px;
+        margin-top: 14px;
+    }
+
+    .estimate-card {
+        padding: 16px;
+        border-radius: 16px;
+    }
+
+    .estimate-card strong {
+        font-size: 1.75rem;
+    }
+
+    .site-footer {
+        padding: 18px;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .footer-brand h3 {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 420px) {
+    .estimate-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .estimate-button,
+    .estimate-reset {
+        width: 100%;
+    }
+}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="header">
+    <div class="brand">
+        <div class="logo-badge">F</div>
+        <div class="brand-text">
+            <h2>FurniSpace</h2>
+            <p>Modern furniture collection</p>
+        </div>
+    </div>
+
+    <button class="menu-toggle" id="menuToggle" type="button">&#9776;</button>
+
+    <nav class="nav-links" id="navLinks">
+        <a href="index.html">Collections</a>
+        <a class="active" href="estimate.html">Estimate</a>
+    </nav>
+</header>
+
+<main class="page-shell">
+    <section class="estimate-section">
+        <div class="estimate-head">
+            <h3>Estimate Calculator</h3>
+            <p>Select a category and plan, enter length and width, and calculate both material and non-material pricing from the estimate API.</p>
+        </div>
+
+        <form class="estimate-form" id="estimateForm" novalidate>
+            <label class="estimate-field">
+                <span>Category</span>
+                <select id="estimateCategory" required></select>
+            </label>
+
+            <label class="estimate-field">
+                <span>Length</span>
+                <input id="estimateLength" type="number" min="0" step="0.01" placeholder="Enter length" required>
+            </label>
+
+            <label class="estimate-field">
+                <span>Width</span>
+                <input id="estimateWidth" type="number" min="0" step="0.01" placeholder="Enter width" required>
+            </label>
+        </form>
+
+        <section class="plan-section" aria-labelledby="planTitle">
+            <div class="plan-head">
+                <div>
+                    <p class="plan-title" id="planTitle">Plan Selection</p>
+                    <p class="plan-copy">Choose one plan below. Each plan card includes a short summary so the user can understand the pricing level quickly.</p>
+                </div>
+            </div>
+
+            <div class="plan-grid" id="estimatePlanGroup"></div>
+        </section>
+
+        <div class="estimate-actions">
+            <button class="estimate-button" id="estimateButton" type="submit" form="estimateForm">Calculate Estimate</button>
+            <button class="estimate-reset" id="estimateReset" type="button">Reset</button>
+        </div>
+
+        <p class="estimate-message" id="estimateMessage"></p>
+
+        <div class="estimate-results">
+            <article class="estimate-card">
+                <span>With Material</span>
+                <strong id="estimateWithTotal">Rs 0</strong>
+            </article>
+            <article class="estimate-card">
+                <span>Without Material</span>
+                <strong id="estimateWithoutTotal">Rs 0</strong>
+            </article>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <span class="footer-kicker">FurniSpace Studio</span>
+                <h3>Move from category selection to estimate planning without losing project context.</h3>
+                <p>Use the estimate flow to compare plans, align pricing, and move the chosen work into the weekly schedule or studio dashboard.</p>
+                <div class="footer-badges">
+                    <span class="footer-badge">Basic</span>
+                    <span class="footer-badge">Premium</span>
+                    <span class="footer-badge">Execution ready</span>
+                </div>
+            </div>
+
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <a href="index.html">Collections</a>
+                <a href="schedule.html">Schedule</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="login.html">Studio login</a>
+            </div>
+
+            <div class="footer-links">
+                <h4>Use Next</h4>
+                <a href="estimate.html?category=TV%20Unit">TV Unit estimate</a>
+                <a href="estimate.html?category=Kitchen">Kitchen estimate</a>
+                <a href="estimate.html?category=Wardrobe">Wardrobe estimate</a>
+                <a href="schedule.html">Open weekly planner</a>
+            </div>
+
+            <div class="footer-links">
+                <h4>Contact</h4>
+                <div class="footer-contact-list">
+                    <div class="footer-contact-card">
+                        <strong>Ashokbhai Dharvaparmar</strong>
+                        <a href="tel:9979884927">9979884927</a>
+                    </div>
+                    <div class="footer-contact-card">
+                        <strong>Yash Dharvaparmar</strong>
+                        <a href="tel:9023517088">9023517088</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>Estimate clearly, compare plans faster, and hand off work with fewer gaps.</p>
+            <a href="dashboard.html">Manage records</a>
+        </div>
+    </footer>
+</main>
+
+<script>
+const ESTIMATE_API = "https://69e76b9c68208c1debe8d996.mockapi.io/Estimate";
+const ESTIMATE_CATEGORIES = [
+    "TV Unit",
+    "Bedroom",
+    "Sofa",
+    "Mandir",
+    "Kitchen",
+    "Wardrobe"
+];
+const ESTIMATE_PLANS = [
+    "Basic",
+    "primium",
+    "Expence"
+];
+const PLAN_DETAILS = {
+    Basic: {
+        label: "Basic",
+        points: [
+            "Budget-friendly pricing for essential work.",
+            "Simple finish and standard execution level.",
+            "Suitable for practical everyday setups."
+        ]
+    },
+    primium: {
+        label: "Premium",
+        points: [
+            "Better detailing and cleaner finish quality.",
+            "Balanced option for design and budget together.",
+            "Fits most modern residential requirements."
+        ]
+    },
+    Expence: {
+        label: "Expence",
+        points: [
+            "High-end execution with richer finishing.",
+            "Best for statement designs and premium builds.",
+            "Used when the final output quality is the priority."
+        ]
+    }
+};
+
+const currencyFormatter = new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0
+});
+
+const menuToggle = document.getElementById("menuToggle");
+const navLinks = document.getElementById("navLinks");
+const estimateForm = document.getElementById("estimateForm");
+const estimateCategory = document.getElementById("estimateCategory");
+const estimatePlanGroup = document.getElementById("estimatePlanGroup");
+const estimateLength = document.getElementById("estimateLength");
+const estimateWidth = document.getElementById("estimateWidth");
+const estimateButton = document.getElementById("estimateButton");
+const estimateReset = document.getElementById("estimateReset");
+const estimateMessage = document.getElementById("estimateMessage");
+const estimateWithTotal = document.getElementById("estimateWithTotal");
+const estimateWithoutTotal = document.getElementById("estimateWithoutTotal");
+
+let estimateRatesCache = null;
+
+function normalizeCategoryName(value) {
+    return String(value || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "");
+}
+
+function getRequestedCategory() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("category") || "";
+}
+
+function formatCurrency(value) {
+    return currencyFormatter.format(Number(value) || 0);
+}
+
+function getSelectedPlan() {
+    return estimatePlanGroup.querySelector('input[name="estimatePlan"]:checked')?.value || "";
+}
+
+function populateEstimateCategories() {
+    estimateCategory.innerHTML = ESTIMATE_CATEGORIES.map((category) => `
+        <option value="${category}">${category}</option>
+    `).join("");
+
+    const requestedCategory = getRequestedCategory();
+
+    if (requestedCategory && ESTIMATE_CATEGORIES.includes(requestedCategory)) {
+        estimateCategory.value = requestedCategory;
+    }
+}
+
+function populateEstimatePlans(preferredPlan = "") {
+    const activePlan = preferredPlan && ESTIMATE_PLANS.includes(preferredPlan) ? preferredPlan : ESTIMATE_PLANS[0];
+
+    estimatePlanGroup.innerHTML = ESTIMATE_PLANS.map((plan) => {
+        const config = PLAN_DETAILS[plan];
+        const points = config.points.map((point) => `<li>${point}</li>`).join("");
+
+        return `
+            <label class="plan-card">
+                <input type="radio" name="estimatePlan" value="${plan}" ${plan === activePlan ? "checked" : ""}>
+                <span class="plan-card-inner">
+                    <span class="plan-topline">
+                        <span class="plan-name">${config.label}</span>
+                        <span class="plan-badge" aria-hidden="true"></span>
+                    </span>
+                    <ul class="plan-points">${points}</ul>
+                </span>
+            </label>
+        `;
+    }).join("");
+
+    estimatePlanGroup.querySelectorAll('input[name="estimatePlan"]').forEach((input) => {
+        input.addEventListener("change", () => {
+            resetEstimateResults();
+        });
+    });
+}
+
+function resetEstimateResults() {
+    estimateWithTotal.textContent = "Rs 0";
+    estimateWithoutTotal.textContent = "Rs 0";
+    estimateMessage.textContent = "";
+    estimateMessage.className = "estimate-message";
+}
+
+function setEstimateMessage(text, type) {
+    estimateMessage.textContent = text;
+    estimateMessage.className = type ? `estimate-message ${type}` : "estimate-message";
+}
+
+async function getEstimateRates() {
+    if (estimateRatesCache) {
+        return estimateRatesCache;
+    }
+
+    const response = await fetch(ESTIMATE_API, {
+        cache: "no-store"
+    });
+
+    if (!response.ok) {
+        throw new Error("Unable to load estimate rates.");
+    }
+
+    const data = await response.json();
+    estimateRatesCache = Array.isArray(data) ? data : (Array.isArray(data.value) ? data.value : []);
+    return estimateRatesCache;
+}
+
+function findEstimateRate(records, selectedCategory) {
+    const normalizedCategory = normalizeCategoryName(selectedCategory);
+    const normalizedPlan = normalizeCategoryName(getSelectedPlan());
+
+    return records.find((item) => {
+        return normalizeCategoryName(item.name) === normalizedCategory
+            && normalizeCategoryName(item.plan) === normalizedPlan;
+    }) || null;
+}
+
+async function calculateEstimate(event) {
+    event.preventDefault();
+
+    const category = estimateCategory.value;
+    const plan = getSelectedPlan();
+    const lengthValue = Number(estimateLength.value);
+    const widthValue = Number(estimateWidth.value);
+
+    if (!category) {
+        setEstimateMessage("Please select a category.", "error");
+        return;
+    }
+
+    if (!plan) {
+        setEstimateMessage("Please select a plan.", "error");
+        return;
+    }
+
+    if (!Number.isFinite(lengthValue) || lengthValue <= 0 || !Number.isFinite(widthValue) || widthValue <= 0) {
+        setEstimateMessage("Please enter valid length and width values greater than zero.", "error");
+        return;
+    }
+
+    estimateButton.disabled = true;
+    estimateButton.textContent = "Calculating...";
+    setEstimateMessage("");
+
+    try {
+        const rates = await getEstimateRates();
+        const matchedRate = findEstimateRate(rates, category);
+
+        if (!matchedRate) {
+            resetEstimateResults();
+            setEstimateMessage(`No estimate pricing found for ${category} - ${plan}. Add that category and plan to the Estimate API first.`, "error");
+            return;
+        }
+
+        const withPrice = Number(matchedRate.with_price);
+        const withoutPrice = Number(matchedRate.without_price);
+
+        if (!Number.isFinite(withPrice) || !Number.isFinite(withoutPrice)) {
+            throw new Error("Estimate prices are not valid numbers.");
+        }
+
+        const area = lengthValue * widthValue;
+        estimateWithTotal.textContent = formatCurrency(area * withPrice);
+        estimateWithoutTotal.textContent = formatCurrency(area * withoutPrice);
+        setEstimateMessage(`Estimate ready for ${category} - ${plan}.`, "success");
+    } catch (error) {
+        resetEstimateResults();
+        setEstimateMessage(error.message || "Unable to calculate estimate right now.", "error");
+    } finally {
+        estimateButton.disabled = false;
+        estimateButton.textContent = "Calculate Estimate";
+    }
+}
+
+function resetEstimateForm() {
+    estimateForm.reset();
+    const requestedCategory = getRequestedCategory();
+    estimateCategory.value = ESTIMATE_CATEGORIES.includes(requestedCategory)
+        ? requestedCategory
+        : ESTIMATE_CATEGORIES[0];
+    populateEstimatePlans();
+    resetEstimateResults();
+}
+
+menuToggle.onclick = () => {
+    navLinks.classList.toggle("active");
+};
+
+estimateForm.addEventListener("submit", calculateEstimate);
+estimateReset.addEventListener("click", resetEstimateForm);
+estimateCategory.addEventListener("change", () => {
+    resetEstimateResults();
+    populateEstimatePlans();
+});
+
+populateEstimateCategories();
+populateEstimatePlans();
+resetEstimateForm();
+</script>
+
+</body>
+</html>
