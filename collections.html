@@ -5,13 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FurniSpace</title>
 <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
-<script>
-    const entryParams = new URLSearchParams(window.location.search);
-
-    if (entryParams.get("view") !== "collections") {
-        window.location.replace("main.html");
-    }
-</script>
 
 <style>
 body {
@@ -504,7 +497,7 @@ body {
 
         <div class="footer-links">
             <h4>Quick Links</h4>
-            <a href="index.html?view=collections">Collections</a>
+            <a href="collections.html">Collections</a>
             <a href="estimate.html?category=TV%20Unit">Estimate</a>
             <a href="schedule.html">Schedule</a>
             <a href="dashboard.html">Dashboard</a>
@@ -512,7 +505,7 @@ body {
 
         <div class="footer-links">
             <h4>Workflow</h4>
-            <a href="index.html?view=collections">Choose a design</a>
+            <a href="collections.html">Choose a design</a>
             <a href="estimate.html?category=Bedroom">Compare pricing</a>
             <a href="schedule.html">Book a slot</a>
             <a href="login.html">Studio login</a>
