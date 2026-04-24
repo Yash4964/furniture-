@@ -142,19 +142,26 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            flex-wrap: wrap;
             min-width: 0;
         }
 
         .welcome-copy {
             text-align: right;
             min-width: 0;
+            max-width: 500px;
         }
 
         .welcome-copy strong {
             display: block;
             margin-bottom: 2px;
             font-size: 0.95rem;
+        }
+
+        .account-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 0 0 auto;
         }
 
         .logout-button,
@@ -190,6 +197,7 @@
             background: rgba(255, 255, 255, 0.72);
             border: 1px solid rgba(91, 74, 56, 0.16);
             box-shadow: 0 12px 22px rgba(48, 35, 20, 0.08);
+            white-space: nowrap;
         }
 
         .change-password-button svg {
@@ -217,21 +225,21 @@
 
         .password-popup-title {
             margin: 0;
-            padding: 26px 28px 0;
+            padding: 24px 30px 0;
             font-family: "Cormorant Garamond", serif;
-            font-size: 2rem;
+            font-size: 1.9rem;
             line-height: 1;
             color: var(--text);
         }
 
         .password-popup-html {
             margin: 0;
-            padding: 18px 28px 0;
+            padding: 16px 30px 0;
         }
 
         .password-form {
             display: grid;
-            gap: 14px;
+            gap: 13px;
             text-align: left;
         }
 
@@ -259,7 +267,7 @@
 
         .password-input-wrap input {
             width: 100%;
-            height: 52px;
+            height: 50px;
             padding: 0 78px 0 15px;
             border: 1px solid var(--line);
             border-radius: 16px;
@@ -307,7 +315,7 @@
         }
 
         .password-popup-actions {
-            padding: 18px 28px 26px;
+            padding: 14px 30px 26px;
         }
 
         .password-confirm-button,
@@ -320,12 +328,14 @@
 
         .password-confirm-button {
             background: linear-gradient(135deg, #252321 0%, #433726 100%) !important;
+            color: #fff !important;
             box-shadow: 0 14px 26px rgba(48, 35, 20, 0.14) !important;
         }
 
         .password-cancel-button {
             color: #433726 !important;
             background: #efe5d7 !important;
+            border: 1px solid rgba(91, 74, 56, 0.18) !important;
         }
 
         .tabs-panel {
@@ -1160,6 +1170,10 @@
             }
 
             .welcome-copy {
+                max-width: none;
+            }
+
+            .welcome-copy {
                 text-align: left;
             }
         }
@@ -1182,9 +1196,15 @@
 
             .topbar-actions {
                 align-items: stretch;
+                flex-direction: column;
             }
 
-            .logout-button {
+            .account-buttons {
+                width: 100%;
+            }
+
+            .logout-button,
+            .change-password-button {
                 width: 100%;
             }
 
@@ -1272,6 +1292,10 @@
                 align-items: stretch;
                 gap: 10px;
                 width: 100%;
+            }
+
+            .account-buttons {
+                flex-direction: column;
             }
 
             .welcome-copy strong {
@@ -1542,14 +1566,16 @@
                     <strong id="welcomeName">Welcome</strong>
                     <p>Switch collections, manage records, and plan carpenter slots from one panel.</p>
                 </div>
-                <button class="change-password-button" id="changePasswordButton" type="button">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="11" width="18" height="10" rx="2"></rect>
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                    </svg>
-                    Change password
-                </button>
-                <button class="logout-button" id="logoutButton" type="button">Logout</button>
+                <div class="account-buttons">
+                    <button class="change-password-button" id="changePasswordButton" type="button">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        Change password
+                    </button>
+                    <button class="logout-button" id="logoutButton" type="button">Logout</button>
+                </div>
             </div>
         </header>
 
@@ -2657,17 +2683,15 @@
             return null;
         }
 
-        async function fetchCurrentLoginUser() {
-            if (sessionUser.id) {
-                const response = await fetch(`${LOGIN_API_URL}/${sessionUser.id}`, {
-                    headers: { Accept: "application/json" },
-                });
-
-                if (response.ok) {
-                    return response.json();
-                }
+        function normalizePasswordApiError(error) {
+            if (error && error.message === "Failed to fetch") {
+                return "Could not connect to the login service. Please check internet connection and try again.";
             }
 
+            return (error && error.message) || "Unable to change password right now.";
+        }
+
+        async function fetchCurrentLoginUser() {
             const response = await fetch(LOGIN_API_URL, {
                 headers: { Accept: "application/json" },
             });
@@ -2677,7 +2701,9 @@
             }
 
             const users = await response.json();
-            const matchedUser = users.find((user) => user.username === sessionUser.username);
+            const matchedUser = users.find((user) => {
+                return String(user.id) === String(sessionUser.id) || user.username === sessionUser.username;
+            });
 
             if (!matchedUser) {
                 throw new Error("Your dashboard account was not found.");
@@ -2686,14 +2712,17 @@
             return matchedUser;
         }
 
-        async function updateLoginPassword(userId, password) {
-            const response = await fetch(`${LOGIN_API_URL}/${userId}`, {
-                method: "PATCH",
+        async function updateLoginPassword(account, password) {
+            const response = await fetch(`${LOGIN_API_URL}/${account.id}`, {
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                     Accept: "application/json",
                 },
-                body: JSON.stringify({ password }),
+                body: JSON.stringify({
+                    ...account,
+                    password,
+                }),
             });
 
             if (!response.ok) {
@@ -2738,6 +2767,8 @@
                 confirmButtonText: "Update password",
                 cancelButtonText: "Cancel",
                 focusConfirm: false,
+                width: 520,
+                showLoaderOnConfirm: true,
                 allowOutsideClick: () => !window.Swal.isLoading(),
                 didOpen: () => {
                     bindPasswordPopupControls();
@@ -2760,7 +2791,7 @@
                             return false;
                         }
 
-                        const updatedAccount = await updateLoginPassword(account.id, values.newPassword);
+                        const updatedAccount = await updateLoginPassword(account, values.newPassword);
 
                         window.localStorage.setItem("dashboardUser", JSON.stringify({
                             id: updatedAccount.id || account.id,
@@ -2769,7 +2800,7 @@
 
                         return updatedAccount;
                     } catch (error) {
-                        setPasswordFormError(error.message || "Unable to change password right now.");
+                        setPasswordFormError(normalizePasswordApiError(error));
                         return false;
                     }
                 },
