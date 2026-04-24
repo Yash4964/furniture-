@@ -107,6 +107,18 @@
             height: 100%;
         }
 
+        .logo-mark.has-custom-logo {
+            padding: 0;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .logo-mark.has-custom-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         .brand-copy {
             display: grid;
             gap: 2px;
@@ -176,6 +188,43 @@
 
         .tabs-panel {
             padding: 18px 22px;
+        }
+
+        .logo-settings-panel {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 16px;
+            align-items: center;
+            padding: 18px 22px;
+        }
+
+        .logo-settings-copy h2 {
+            margin: 0 0 4px;
+            font-size: 1rem;
+        }
+
+        .logo-settings-copy p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.55;
+            font-size: 0.9rem;
+        }
+
+        .logo-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .logo-file-input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            clip-path: inset(50%);
+            white-space: nowrap;
         }
 
         .eyebrow {
@@ -1325,7 +1374,7 @@
     <main class="page-shell">
         <header class="topbar panel">
             <div class="brand">
-                <div class="logo-mark" aria-hidden="true">
+                <div class="logo-mark" aria-hidden="true" data-site-logo>
                     <svg viewBox="0 0 120 120" role="img">
                         <defs>
                             <linearGradient id="logoGlow" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -1352,6 +1401,19 @@
                 <button class="logout-button" id="logoutButton" type="button">Logout</button>
             </div>
         </header>
+
+        <section class="panel logo-settings-panel">
+            <div class="logo-settings-copy">
+                <p class="eyebrow">Website logo</p>
+                <h2>Change logo for the full website</h2>
+                <p>Upload one logo here and it will update the header logo on the main, collection, estimate, schedule, login, and dashboard pages in this browser.</p>
+            </div>
+            <div class="logo-actions">
+                <input class="logo-file-input" id="siteLogoInput" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml">
+                <button class="secondary-button" id="uploadLogoButton" type="button">Upload logo</button>
+                <button class="secondary-button" id="resetLogoButton" type="button">Reset logo</button>
+            </div>
+        </section>
 
         <section class="panel tabs-panel">
             <p class="eyebrow">Collections</p>
@@ -1595,6 +1657,7 @@
         </footer>
     </main>
 
+    <script src="logo-settings.js"></script>
     <script>
         const COLLECTIONS = {
             tv: {
@@ -1693,6 +1756,9 @@
         const tabsRow = document.getElementById("tabsRow");
         const welcomeName = document.getElementById("welcomeName");
         const logoutButton = document.getElementById("logoutButton");
+        const siteLogoInput = document.getElementById("siteLogoInput");
+        const uploadLogoButton = document.getElementById("uploadLogoButton");
+        const resetLogoButton = document.getElementById("resetLogoButton");
         const formTitle = document.getElementById("formTitle");
         const formCopy = document.getElementById("formCopy");
         const tableTitle = document.getElementById("tableTitle");
@@ -3172,6 +3238,74 @@
         logoutButton.addEventListener("click", () => {
             window.localStorage.removeItem("dashboardUser");
             window.location.href = "login.html";
+        });
+
+        uploadLogoButton.addEventListener("click", () => {
+            siteLogoInput.click();
+        });
+
+        siteLogoInput.addEventListener("change", () => {
+            const file = siteLogoInput.files && siteLogoInput.files[0];
+
+            if (!file) {
+                return;
+            }
+
+            if (!file.type.startsWith("image/")) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Invalid file",
+                    text: "Please select an image file for the logo.",
+                    confirmButtonColor: "#433726",
+                });
+                siteLogoInput.value = "";
+                return;
+            }
+
+            if (file.size > 900000) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Logo is too large",
+                    text: "Please upload a logo image under 900 KB.",
+                    confirmButtonColor: "#433726",
+                });
+                siteLogoInput.value = "";
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = () => {
+                window.FurniSpaceLogo.set(reader.result);
+                siteLogoInput.value = "";
+                Swal.fire({
+                    icon: "success",
+                    title: "Logo updated",
+                    text: "The website logo has been updated across all pages.",
+                    confirmButtonColor: "#433726",
+                });
+            };
+
+            reader.onerror = () => {
+                Swal.fire({
+                    icon: "error",
+                    title: "Upload failed",
+                    text: "Unable to read this logo image.",
+                    confirmButtonColor: "#433726",
+                });
+            };
+
+            reader.readAsDataURL(file);
+        });
+
+        resetLogoButton.addEventListener("click", () => {
+            window.FurniSpaceLogo.clear();
+            Swal.fire({
+                icon: "success",
+                title: "Logo reset",
+                text: "The default logo has been restored.",
+                confirmButtonColor: "#433726",
+            });
         });
 
         crudForm.addEventListener("submit", saveRecord);

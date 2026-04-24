@@ -56,6 +56,18 @@ body {
     box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
 }
 
+.logo-badge.has-custom-logo {
+    padding: 0;
+    overflow: hidden;
+    background: #fff;
+}
+
+.logo-badge.has-custom-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .brand-text h2 {
     margin: 0;
     font-size: 22px;
@@ -458,12 +470,13 @@ body {
 }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="logo-settings.js" defer></script>
 </head>
 <body>
 
 <header class="header">
     <a class="brand" href="main.html" aria-label="Open FurniSpace main page">
-        <div class="logo-badge">F</div>
+        <div class="logo-badge" data-site-logo>F</div>
         <div class="brand-text">
             <h2>FurniSpace</h2>
             <p>Modern furniture collection</p>
