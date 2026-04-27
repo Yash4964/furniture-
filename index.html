@@ -6,7 +6,7 @@
 <title>FurniSpace</title>
 <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
 <script>
-    const entryParams = new URLSearchParams(window.location.search);
+    const entryParams = new URLSearchParams(wingitdow.location.search);
 
     if (entryParams.get("view") !== "collections") {
         window.location.replace("main.html");
@@ -525,6 +525,7 @@ body {
 
         <div class="footer-links">
             <h4>Workflow</h4>
+            <a href="ai-room.html">Upload room photo</a>
             <a href="index.html?view=collections">Choose a design</a>
             <a href="estimate.html?category=Bedroom">Compare pricing</a>
             <a href="schedule.html">Book a slot</a>
@@ -864,6 +865,23 @@ function loadWardrobe() {
     loadData("wardrobe");
 }
 
+function loadInitialCollection() {
+    const categoryLoaders = {
+        tv: loadTV,
+        "tv unit": loadTV,
+        bedroom: loadBedroom,
+        sofa: loadSofa,
+        mandir: loadMandir,
+        kitchen: loadKitchen,
+        wardrobe: loadWardrobe
+    };
+    const params = new URLSearchParams(window.location.search);
+    const category = (params.get("category") || "tv").trim().toLowerCase();
+    const loader = categoryLoaders[category] || loadTV;
+
+    loader();
+}
+
 setImageFallback(modalImg, getPlaceholderUrl("modal"));
 
 closeModal.onclick = closeImageModal;
@@ -876,7 +894,7 @@ window.onclick = (e) => {
 menuToggle.onclick = () => {
     navLinks.classList.toggle("active");
 };
-loadTV();
+loadInitialCollection();
 </script>
 
 </body>
