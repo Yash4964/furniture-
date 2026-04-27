@@ -1189,6 +1189,7 @@
             .tabs-panel,
             .table-panel,
             .form-panel,
+            .logo-settings-panel,
             .topbar,
             .site-footer {
                 padding: 18px;
@@ -1246,9 +1247,28 @@
             .tabs-panel,
             .table-panel,
             .form-panel,
+            .logo-settings-panel,
             .topbar,
             .site-footer {
                 padding: 16px;
+            }
+
+            .logo-settings-panel {
+                grid-template-columns: 1fr;
+                align-items: stretch;
+                gap: 14px;
+            }
+
+            .logo-settings-copy h2,
+            .logo-settings-copy p {
+                overflow-wrap: anywhere;
+            }
+
+            .logo-actions {
+                width: 100%;
+                flex-direction: column;
+                justify-content: stretch;
+                gap: 8px;
             }
 
             .stats-row {
@@ -1465,6 +1485,7 @@
             }
 
             .topbar,
+            .logo-settings-panel,
             .tabs-panel,
             .form-panel,
             .table-panel {
