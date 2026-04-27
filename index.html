@@ -6,7 +6,7 @@
 <title>FurniSpace</title>
 <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
 <script>
-    const entryParams = new URLSearchParams(wingitdow.location.search);
+    const entryParams = new URLSearchParams(window.location.search);
 
     if (entryParams.get("view") !== "collections") {
         window.location.replace("main.html");
